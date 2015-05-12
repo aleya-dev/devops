@@ -1,3 +1,7 @@
+if (NOT Boost_UNIT_TEST_FRAMEWORK_FOUND)
+    message(FATAL_ERROR "Unittests.cmake requires the boost unit_test_framework component.")
+endif ()
+
 include(CMakeParseArguments)
 
 include(CTest)
@@ -29,6 +33,11 @@ function(add_unit_test_suite)
     if (UNIT_TEST_PARSED_ARGS_INCLUDES)
         include_directories(${UNIT_TEST_PARSED_ARGS_INCLUDES})
     endif ()
+
+    target_link_libraries(
+        ${UNIT_TEST_PARSED_ARGS_TARGET}
+        ${Boost_LIBRARIES}
+    )
 
     if (UNIT_TEST_PARSED_ARGS_LIBRARIES)
         target_link_libraries(
