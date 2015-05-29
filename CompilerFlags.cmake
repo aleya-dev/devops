@@ -1,13 +1,19 @@
 message("Compiler: ${CMAKE_CXX_COMPILER_ID}")
 message("Version: ${CMAKE_CXX_COMPILER_VERSION}")
 
+if (MSVC)
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 18.0)
+        message(FATAL_ERROR "Requires Visual Studio 2013 or higher!")
+    endif ()
+endif ()
+
 if (NOT MSVC)
     message("Not on Visual Studio. Setting flags:")
     message(" - C++1y support")
     list(APPEND CMAKE_CXX_FLAGS "-std=c++1y ${CMAKE_CXX_FLAGS}")
 endif ()
 
-if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+if(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
     if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 5.1)
         message(FATAL_ERROR "Requires GCC 5.1.0 or higher!")
     else ()
