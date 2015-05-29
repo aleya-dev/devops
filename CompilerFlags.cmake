@@ -1,0 +1,21 @@
+message("Compiler: ${CMAKE_CXX_COMPILER_ID}")
+message("Version: ${CMAKE_CXX_COMPILER_VERSION}")
+
+if (NOT MSVC)
+    message("Not on Visual Studio. Setting flags:")
+    message(" - C++1y support")
+    list(APPEND CMAKE_CXX_FLAGS "-std=c++1y ${CMAKE_CXX_FLAGS}")
+endif ()
+
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 5.1)
+        message(FATAL_ERROR "Requires GCC 5.1.0 or higher!")
+    else ()
+        message("GNU GCC detected. Setting flags:")
+        message(" - CLion Debugger STL Renderer workaround")
+        message(" - Suppressing deprecation warnings.")
+        set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -gdwarf-3 -Wno-deprecated-declarations")
+        set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -gdwarf-3 -Wno-deprecated-declarations")
+    endif ()
+endif ()
+
