@@ -30,8 +30,10 @@ function(add_unit_test_suite)
 
     add_executable(${UNIT_TEST_PARSED_ARGS_TARGET} ${SRCS})
 
+    target_include_directories(${UNIT_TEST_PARSED_ARGS_TARGET} PRIVATE ${Boost_INCLUDE_DIRS})
+
     if (UNIT_TEST_PARSED_ARGS_INCLUDES)
-        include_directories(${UNIT_TEST_PARSED_ARGS_INCLUDES})
+        target_include_directories(${UNIT_TEST_PARSED_ARGS_TARGET} PRIVATE ${UNIT_TEST_PARSED_ARGS_INCLUDES})
     endif ()
 
     target_link_libraries(
