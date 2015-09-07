@@ -11,7 +11,7 @@ function(add_unit_test_suite)
     cmake_parse_arguments(
         UNIT_TEST_PARSED_ARGS
         ""
-        "TARGET"
+        "TARGET;FOLDER"
         "SOURCES;LIBRARIES;INCLUDES;LABELS"
         ${ARGN}
     )
@@ -29,6 +29,13 @@ function(add_unit_test_suite)
     endforeach()
 
     add_executable(${UNIT_TEST_PARSED_ARGS_TARGET} ${SRCS})
+
+    if (UNIT_TEST_PARSED_ARGS_FOLDER)
+        set_target_properties(
+            ${UNIT_TEST_PARSED_ARGS_TARGET} PROPERTIES
+            FOLDER ${UNIT_TEST_PARSED_ARGS_FOLDER}
+        )
+    endif ()
 
     target_include_directories(${UNIT_TEST_PARSED_ARGS_TARGET} PRIVATE ${Boost_INCLUDE_DIRS})
 
