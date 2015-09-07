@@ -2,8 +2,8 @@ message("Compiler: ${CMAKE_CXX_COMPILER_ID}")
 message("Version: ${CMAKE_CXX_COMPILER_VERSION}")
 
 if (MSVC)
-    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 18.0)
-        message(FATAL_ERROR "Requires Visual Studio 2013 or higher!")
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 19.0)
+        message(FATAL_ERROR "Requires Visual Studio 2015 or higher!")
     endif ()
 
     message("Visual Studio detected. Setting flags:")
