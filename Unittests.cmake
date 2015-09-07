@@ -4,9 +4,6 @@ endif ()
 
 include(CMakeParseArguments)
 
-include(CTest)
-enable_testing()
-
 function(add_unit_test_suite)
     cmake_parse_arguments(
         UNIT_TEST_PARSED_ARGS
