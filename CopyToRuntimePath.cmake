@@ -23,7 +23,7 @@ function(copy_folder_to_runtime_path)
         set(FUNCTION_ARGS_DESTINATION "${CMAKE_BINARY_DIR}/bin/${FUNCTION_ARGS_DESTINATION}")
     endif ()
 
-    if (MSVC)
+    if (MSVC OR CMAKE_GENERATOR STREQUAL Xcode)
         if (NOT FUNCTION_ARGS_CONFIGURATIONS)
             set(FUNCTION_ARGS_CONFIGURATIONS "Debug" "Release")
         endif ()
@@ -33,7 +33,7 @@ function(copy_folder_to_runtime_path)
 
     # Copying of the files.
     foreach (CONFIGURATION ${FUNCTION_ARGS_CONFIGURATIONS})
-        if (MSVC)
+        if (MSVC OR CMAKE_GENERATOR STREQUAL Xcode)
             set(DESTINATION "${FUNCTION_ARGS_DESTINATION}/${CONFIGURATION}")
         else ()
             set(DESTINATION "${FUNCTION_ARGS_DESTINATION}")
