@@ -1,0 +1,11 @@
+osx:
+  tags:
+    - osx
+  script:
+    - echo TODO Add cmake tests somehow.
+
+windows:
+  tags:
+    - windows
+  script:
+    - echo TODO Add cmake tests somehow.
