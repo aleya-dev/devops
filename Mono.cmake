@@ -1,5 +1,9 @@
 include(CMakeParseArguments)
 
+if (NOT MONO_FOUND)
+    message(FATAL_ERROR "Mono is required for this CMake script. Please use find_package(Mono) before including.")
+endif ()
+
 function(add_mono_assembly)
     cmake_parse_arguments(
         MONO_ASSEMBLY_PARSED_ARGS
@@ -8,14 +12,6 @@ function(add_mono_assembly)
         "SOURCES"
         ${ARGN}
     )
-
-    find_program(MONO_COMPILER_EXECUTABLE gmcs)
-
-    if (NOT MONO_COMPILER_EXECUTABLE)
-        message(FATAL_ERROR "Could not find mono.")
-    endif ()
-
-    message("Usinig mono: ${MONO_COMPILER_EXECUTABLE}")
 
     if (NOT MONO_ASSEMBLY_PARSED_ARGS_TYPE)
         set(MONO_ASSEMBLY_PARSED_ARGS_TYPE "library")
@@ -31,7 +27,6 @@ function(add_mono_assembly)
         message(FATAL_ERROR "Type must be either exe or library.")
     endif ()
 
-
     set(FULL_PATH_SOURCES "")
     foreach(_SOURCE ${MONO_ASSEMBLY_PARSED_ARGS_SOURCES})
         get_filename_component(_FULL_PATH "${SOURCE}" ABSOLUTE)
@@ -44,7 +39,7 @@ function(add_mono_assembly)
 
     add_custom_target(
         ${MONO_ASSEMBLY_PARSED_ARGS_TARGET} ALL
-        ${MONO_COMPILER_EXECUTABLE} -t:${MONO_ASSEMBLY_PARSED_ARGS_TYPE} ${FULL_PATH_SOURCES} -out:${MONO_ASSEMBLY_PARSED_ARGS_TARGET}${_FILE_EXTENSION}
+        ${MCS_EXECUTABLE} -t:${MONO_ASSEMBLY_PARSED_ARGS_TYPE} ${FULL_PATH_SOURCES} -out:${MONO_ASSEMBLY_PARSED_ARGS_TARGET}${_FILE_EXTENSION}
         WORKING_DIRECTORY "${MONO_ASSEMBLY_PARSED_ARGS_DESTINATION}"
         COMMENT "Building Mono Library ${MONO_ASSEMBLY_PARSED_ARGS_TARGET}"
         SOURCES ${FULL_PATH_SOURCES}
