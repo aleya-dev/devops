@@ -1,5 +1,5 @@
-if (NOT Boost_UNIT_TEST_FRAMEWORK_FOUND)
-    message(FATAL_ERROR "Unittests.cmake requires the boost unit_test_framework component.")
+if (NOT TARGET gtest)
+    message(FATAL_ERROR "Unittests.cmake requires google test included as submodule.")
 endif ()
 
 include(CMakeParseArguments)
@@ -34,15 +34,14 @@ function(add_unit_test_suite)
         )
     endif ()
 
-    target_include_directories(${UNIT_TEST_PARSED_ARGS_TARGET} PRIVATE ${Boost_INCLUDE_DIRS})
-
     if (UNIT_TEST_PARSED_ARGS_INCLUDES)
         target_include_directories(${UNIT_TEST_PARSED_ARGS_TARGET} PRIVATE ${UNIT_TEST_PARSED_ARGS_INCLUDES})
     endif ()
 
     target_link_libraries(
         ${UNIT_TEST_PARSED_ARGS_TARGET}
-        ${Boost_LIBRARIES}
+        gtest
+        gtest_main
     )
 
     if (UNIT_TEST_PARSED_ARGS_LIBRARIES)
