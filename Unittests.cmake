@@ -42,6 +42,7 @@ function(add_unit_test_suite)
         ${UNIT_TEST_PARSED_ARGS_TARGET}
         gtest
         gtest_main
+        gmock
     )
 
     if (UNIT_TEST_PARSED_ARGS_LIBRARIES)
