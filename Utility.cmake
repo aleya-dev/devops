@@ -1,3 +1,5 @@
+set(AEON_CMAKE_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR})
+
 macro(add_source_path target dir)
     set(source_files "")
     file(
@@ -16,3 +18,17 @@ macro(generate_source_groups sources)
         source_group("${source_group_name}" FILES ${f})
     endforeach()
 endmacro()
+
+function(set_working_dir target dir)
+    message(STATUS "Setting working dir for target ${target} to ${dir}")
+
+    if (MSVC)
+        if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 19.0)
+            message(STATUS "set_working_dir requires Visual Studio 2015 or higher. Skipping.")
+        else ()
+            get_filename_component(absolute_dir "${dir}" ABSOLUTE)
+            file(TO_NATIVE_PATH "${absolute_dir}" WORKING_DIR)
+            configure_file(${AEON_CMAKE_ROOT_DIR}/VisualStudioWorkingDir.vcxproj.user.in ${target}.vcxproj.user @ONLY)
+        endif ()
+    endif ()
+endfunction()
