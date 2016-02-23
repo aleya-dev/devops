@@ -1,0 +1,12 @@
+#pragma once
+
+namespace aeon
+{
+namespace buildinfo
+{
+
+static const char * const full_version = "@AEON_CMAKE_FULL_VERSION@";
+static const char * const build_date = "@AEON_CMAKE_BUILD_DATE@";
+
+} // namespace buildinfo
+} // namespace aeon

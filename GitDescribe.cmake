@@ -4,7 +4,7 @@ function(get_git_describe_tag git_describe_tag)
     endif()
 
     execute_process(
-        COMMAND ${GIT_EXECUTABLE} "describe" "--tags"
+        COMMAND ${GIT_EXECUTABLE} "describe" "--tags" "--long"
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
         OUTPUT_VARIABLE GIT_DESCRIBE_OUTPUT
         ERROR_VARIABLE GIT_DESCRIBE_ERROR_OUTPUT
