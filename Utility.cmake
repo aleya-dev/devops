@@ -6,6 +6,8 @@ macro(add_source_path target dir)
         GLOB source_files
         RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
             ${dir}/*.cpp
+            ${dir}/*.c
+            ${dir}/*.mm
             ${dir}/*.h
     )
     list(APPEND ${target} "${source_files}")
