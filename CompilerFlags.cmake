@@ -14,6 +14,7 @@ if (MSVC)
     message(" - Setting Warning Level 4")
     message(" - Ignore warning C4201: nonstandard extension used: nameless struct/union")
     message(" - Treat warnings as errors (/WX)")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_CRT_SECURE_NO_WARNINGS")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_SCL_SECURE_NO_WARNINGS -D_CRT_SECURE_NO_DEPRECATE -DNOMINMAX -D_WIN32_WINNT=0x0601 /W4 /WX /wd4201")
 endif ()
 
