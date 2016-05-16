@@ -7,7 +7,7 @@ include(CMakeParseArguments)
 function(add_unit_test_suite)
     cmake_parse_arguments(
         UNIT_TEST_PARSED_ARGS
-        ""
+        "NO_GTEST_MAIN"
         "TARGET;FOLDER"
         "SOURCES;LIBRARIES;INCLUDES;LABELS"
         ${ARGN}
@@ -42,9 +42,12 @@ function(add_unit_test_suite)
     target_link_libraries(
         ${UNIT_TEST_PARSED_ARGS_TARGET}
         gtest
-        gtest_main
         gmock
     )
+
+    if (NOT ${UNIT_TEST_PARSED_ARGS_NO_GTEST_MAIN})
+        target_link_libraries(${UNIT_TEST_PARSED_ARGS_TARGET} gtest_main)
+    endif ()
 
     if (UNIT_TEST_PARSED_ARGS_LIBRARIES)
         target_link_libraries(
