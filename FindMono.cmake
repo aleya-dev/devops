@@ -17,7 +17,7 @@ find_program(
 )
 
 find_program(
-    MCS_EXECUTABLE mcs
+    MCS_EXECUTABLE mcs.bat mcs
     PATH $ENV{MONO_DEPENDENCIES_PREFIX}/bin
 )
 
