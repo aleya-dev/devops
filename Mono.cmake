@@ -12,6 +12,7 @@
 # prior written permission is obtained from Robin Degen.
 
 include(CMakeParseArguments)
+include(CopyToRuntimePath)
 
 if (NOT MONO_FOUND)
     message(FATAL_ERROR "Mono is required for this CMake script. Please use find_package(Mono) before including.")
@@ -75,5 +76,13 @@ function(add_mono_assembly)
             SOURCES ${FULL_PATH_SOURCES}
         )
     endif ()
+endfunction()
+
+function(copy_mono_runtimes_to_runtime_path)
+    message(STATUS "Copying Mono runtimes to the runtime path.")
+    copy_folder_to_runtime_path(
+        PATH ${MONO_LIBRARY_PATH}/mono
+        DESTINATION mono
+    )
 endfunction()
 
