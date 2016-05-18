@@ -11,11 +11,25 @@
 # information or reproduction of this material is strictly forbidden unless
 # prior written permission is obtained from Robin Degen.
 
-find_program(MONO_EXECUTABLE mono)
-find_program(MCS_EXECUTABLE mcs)
-find_program(GACUTIL_EXECUTABLE gacutil)
+find_program(
+    MONO_EXECUTABLE mono
+    PATH $ENV{MONO_DEPENDENCIES_PREFIX}/bin
+)
 
-find_library(MONO_MAIN_LIBRARY mono-2.0)
+find_program(
+    MCS_EXECUTABLE mcs
+    PATH $ENV{MONO_DEPENDENCIES_PREFIX}/bin
+)
+
+find_program(
+    GACUTIL_EXECUTABLE gacutil
+    PATH $ENV{MONO_DEPENDENCIES_PREFIX}/bin
+)
+
+find_library(
+    MONO_MAIN_LIBRARY mono-2.0
+    PATH $ENV{MONO_DEPENDENCIES_PREFIX}/lib
+)
 
 set(MONO_FOUND FALSE CACHE INTERNAL "")
 
