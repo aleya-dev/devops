@@ -29,12 +29,7 @@ function(copy_folder_to_runtime_path)
         "${FULL_SOURCE_PATH}/*"
     )
 
-    # Use default values if applicable.
-    if (NOT FUNCTION_ARGS_DESTINATION)
-        set(FUNCTION_ARGS_DESTINATION "${CMAKE_BINARY_DIR}/bin")
-    else ()
-        set(FUNCTION_ARGS_DESTINATION "${CMAKE_BINARY_DIR}/bin/${FUNCTION_ARGS_DESTINATION}")
-    endif ()
+    set(BIN_PATH "${CMAKE_BINARY_DIR}/bin")
 
     if (MSVC OR CMAKE_GENERATOR STREQUAL Xcode)
         if (NOT FUNCTION_ARGS_CONFIGURATIONS)
@@ -47,9 +42,9 @@ function(copy_folder_to_runtime_path)
     # Copying of the files.
     foreach (CONFIGURATION ${FUNCTION_ARGS_CONFIGURATIONS})
         if (MSVC OR CMAKE_GENERATOR STREQUAL Xcode)
-            set(DESTINATION "${FUNCTION_ARGS_DESTINATION}/${CONFIGURATION}")
+            set(DESTINATION "${BIN_PATH}/${CONFIGURATION}/${FUNCTION_ARGS_DESTINATION}")
         else ()
-            set(DESTINATION "${FUNCTION_ARGS_DESTINATION}")
+            set(DESTINATION "${BIN_PATH}/${FUNCTION_ARGS_DESTINATION}")
         endif ()
 
         execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory "${DESTINATION}")
