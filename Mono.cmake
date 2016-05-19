@@ -53,8 +53,7 @@ function(add_mono_assembly)
 
     file(MAKE_DIRECTORY ${MONO_ASSEMBLY_PARSED_ARGS_DESTINATION})
 
-    execute_process(COMMAND "${MONO_PKG_CONFIG_EXECUTABLE}" "--libs" "dotnet" OUTPUT_VARIABLE MONO_DOTNET_PKG_CONFIG OUTPUT_STRIP_TRAILING_WHITESPACE)
-    string(REPLACE " " ";" MONO_DOTNET_PKG_CONFIG "${MONO_DOTNET_PKG_CONFIG}")
+    get_mono_pkg_config("dotnet" MONO_DOTNET_PKG_CONFIG)
 
     add_custom_target(
         ${MONO_ASSEMBLY_PARSED_ARGS_TARGET} ALL
@@ -84,5 +83,11 @@ function(copy_mono_runtimes_to_runtime_path)
         PATH ${MONO_LIBRARY_PATH}/mono
         DESTINATION mono
     )
+endfunction()
+
+function(get_mono_pkg_config package output)
+    execute_process(COMMAND "${MONO_PKG_CONFIG_EXECUTABLE}" "--libs" ${package} OUTPUT_VARIABLE _OUTPUT OUTPUT_STRIP_TRAILING_WHITESPACE)
+    string(REPLACE " " ";" _OUTPUT "${_OUTPUT}")
+    set(${output} ${_OUTPUT} PARENT_SCOPE)
 endfunction()
 
