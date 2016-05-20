@@ -53,11 +53,12 @@ function(add_mono_assembly)
 
     file(MAKE_DIRECTORY ${MONO_ASSEMBLY_PARSED_ARGS_DESTINATION})
 
-    get_mono_pkg_config("dotnet" MONO_DOTNET_PKG_CONFIG)
+    #Dotnet package config disabled, since it only works properly on 32-bit.
+    #get_mono_pkg_config("dotnet" MONO_DOTNET_PKG_CONFIG)
 
     add_custom_target(
         ${MONO_ASSEMBLY_PARSED_ARGS_TARGET} ALL
-        ${MONO_MCS_EXECUTABLE} "-t:${MONO_ASSEMBLY_PARSED_ARGS_TYPE}" "${FULL_PATH_SOURCES}" ${MONO_DOTNET_PKG_CONFIG} "-out:${MONO_ASSEMBLY_PARSED_ARGS_TARGET}${_FILE_EXTENSION}"
+        ${MONO_MCS_EXECUTABLE} "-t:${MONO_ASSEMBLY_PARSED_ARGS_TYPE}" "${FULL_PATH_SOURCES}" "-out:${MONO_ASSEMBLY_PARSED_ARGS_TARGET}${_FILE_EXTENSION}"
         WORKING_DIRECTORY "${MONO_ASSEMBLY_PARSED_ARGS_DESTINATION}"
         COMMENT "Building Mono Library ${MONO_ASSEMBLY_PARSED_ARGS_TARGET}"
         SOURCES ${FULL_PATH_SOURCES}
