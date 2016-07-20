@@ -37,6 +37,10 @@ if (NOT MSVC AND NOT CYGWIN)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1y")
 endif ()
 
+if (NOT CMAKE_CXX_COMPILER_ID)
+    set(CMAKE_CXX_COMPILER_ID Unknown)
+endif ()
+
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU" AND NOT CYGWIN)
     if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 5.1)
         message(FATAL_ERROR "Requires GCC 5.1.0 or higher!")
