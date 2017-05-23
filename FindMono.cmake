@@ -21,31 +21,33 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
+file(TO_CMAKE_PATH $ENV{MONO_DEPENDENCIES_PREFIX} MONO_DEPENDENCIES_PREFIX)
+
 find_program(
     MONO_EXECUTABLE mono
-    PATH $ENV{MONO_DEPENDENCIES_PREFIX}/bin
+    PATHS ${MONO_DEPENDENCIES_PREFIX}/bin
 )
 
 if (MSVC)
     find_program(
         MONO_MCS_EXECUTABLE mcs.bat
-        PATH $ENV{MONO_DEPENDENCIES_PREFIX}/bin
+        PATHS ${MONO_DEPENDENCIES_PREFIX}/bin
     )
 else ()
     find_program(
         MONO_MCS_EXECUTABLE mcs
-        PATH $ENV{MONO_DEPENDENCIES_PREFIX}/bin
+        PATHS ${MONO_DEPENDENCIES_PREFIX}/bin
     )
 endif ()
 
 find_program(
     MONO_PKG_CONFIG_EXECUTABLE pkg-config
-    PATH $ENV{MONO_DEPENDENCIES_PREFIX}/bin
+    PATHS ${MONO_DEPENDENCIES_PREFIX}/bin
 )
 
 find_library(
-    MONO_MAIN_LIBRARY mono-2.0
-    PATH $ENV{MONO_DEPENDENCIES_PREFIX}/lib
+    MONO_MAIN_LIBRARY NAMES mono-2.0 mono-2.0-sgen
+    PATHS ${MONO_DEPENDENCIES_PREFIX}/lib
 )
 
 set(MONO_FOUND FALSE CACHE INTERNAL "")
@@ -75,7 +77,7 @@ if(MONO_EXECUTABLE AND MONO_MCS_EXECUTABLE AND MONO_PKG_CONFIG_EXECUTABLE AND MO
 
     if (MSVC)
         include(CopyToRuntimePath)
-        find_file(MONO_DLL_PATH mono-2.0.dll PATH ${MONO_BINARY_PATH})
+        find_file(MONO_DLL_PATH NAMES mono-2.0.dll mono-2.0-sgen.dll PATHS ${MONO_BINARY_PATH})
         copy_files_to_runtime_path(FILES ${MONO_DLL_PATH})
     endif ()
 
