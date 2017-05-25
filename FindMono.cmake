@@ -25,31 +25,45 @@ if ($ENV{MONO_DEPENDENCIES_PREFIX})
     file(TO_CMAKE_PATH $ENV{MONO_DEPENDENCIES_PREFIX} MONO_DEPENDENCIES_PREFIX)
 endif ()
 
+set (MONO_DEFAULT_INSTALL_PATH
+    "C:/Program Files/Mono"
+)
+
 find_program(
     MONO_EXECUTABLE mono
-    PATHS ${MONO_DEPENDENCIES_PREFIX}/bin
+    PATHS
+        ${MONO_DEPENDENCIES_PREFIX}/bin
+        ${MONO_DEFAULT_INSTALL_PATH}/bin
 )
 
 if (MSVC)
     find_program(
         MONO_MCS_EXECUTABLE mcs.bat
-        PATHS ${MONO_DEPENDENCIES_PREFIX}/bin
+        PATHS
+            ${MONO_DEPENDENCIES_PREFIX}/bin
+            ${MONO_DEFAULT_INSTALL_PATH}/bin
     )
 else ()
     find_program(
         MONO_MCS_EXECUTABLE mcs
-        PATHS ${MONO_DEPENDENCIES_PREFIX}/bin
+        PATHS
+            ${MONO_DEPENDENCIES_PREFIX}/bin
+            ${MONO_DEFAULT_INSTALL_PATH}/bin
     )
 endif ()
 
 find_program(
     MONO_PKG_CONFIG_EXECUTABLE pkg-config
-    PATHS ${MONO_DEPENDENCIES_PREFIX}/bin
+    PATHS
+        ${MONO_DEPENDENCIES_PREFIX}/bin
+        ${MONO_DEFAULT_INSTALL_PATH}/bin
 )
 
 find_library(
     MONO_MAIN_LIBRARY NAMES mono-2.0 mono-2.0-sgen
-    PATHS ${MONO_DEPENDENCIES_PREFIX}/lib
+    PATHS
+        ${MONO_DEPENDENCIES_PREFIX}/lib
+        ${MONO_DEFAULT_INSTALL_PATH}/lib
 )
 
 set(MONO_FOUND FALSE CACHE INTERNAL "")
