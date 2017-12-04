@@ -36,7 +36,7 @@ if (MSVC)
         message(" - Treat warnings as errors (/WX)")
         message(" - Enforce latest C++17 ISO standard.")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /WX")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++latest /permissive-")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++latest /permissive- /Zc:twoPhase-")
     endif ()
 
     message(" - Defining _SCL_SECURE_NO_WARNINGS")
