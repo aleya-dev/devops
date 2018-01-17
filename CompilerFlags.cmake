@@ -77,7 +77,7 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-c++17-extensions")
 
     message(" - Link with c++experimental")
-    get_filename_component(AEON_CLANG_PREFIX_PATH $ENV{CXX} DIRECTORY)
+    get_filename_component(AEON_CLANG_PREFIX_PATH "$ENV{CXX}" DIRECTORY)
     link_directories("${AEON_CLANG_PREFIX_PATH}/../lib")
     link_libraries(c++experimental)
 endif ()
