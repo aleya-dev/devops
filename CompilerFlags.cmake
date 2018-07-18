@@ -81,6 +81,13 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
         message(" - Disable C++17 extension warnings")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-c++17-extensions")
 
+        # Clang will complain about the usage of a static member variable inside
+        # of a templated class if the instantiation is done in another compilation
+        # unit. However this seems odd, since this would normally trigger a linker
+        # error anyway.
+        message(" - Disable warning for 'undefined' template variables.")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wundefined-var-template")
+
         link_libraries(stdc++fs)
     endif ()
 endif ()
