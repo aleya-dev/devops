@@ -52,10 +52,24 @@ if (MSVC)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_CRT_SECURE_NO_WARNINGS")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_SCL_SECURE_NO_WARNINGS -D_CRT_SECURE_NO_DEPRECATE -D_ENABLE_ATOMIC_ALIGNMENT_FIX -DNOMINMAX -D_WIN32_WINNT=0x0601 /W4 /wd4100 /wd4201 /wd4373")
 
-    # Enabling AVX2 on Visual Studio will also enable SSE optimizations.
-    message(" - Encourage optimizations for AVX2 (/arch:AVX2)")
-    set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} /arch:AVX2")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /arch:AVX2")
+    include(Simd)
+
+    if (AEON_CPU_HAS_AVX2)
+        # Enabling AVX2 on Visual Studio will also enable SSE optimizations.
+        message(" - Encourage optimizations for AVX2 (/arch:AVX2)")
+        set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} /arch:AVX2")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /arch:AVX2")
+    else ()
+        if (AEON_CPU_HAS_AVX)
+            message(" - Encourage optimizations for AVX (/arch:AVX)")
+            set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} /arch:AVX")
+            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /arch:AVX")
+        else ()
+            message(" - Encourage optimizations for SSE2 (/arch:SSE2)")
+            set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} /arch:SSE2")
+            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /arch:SSE2")
+        endif ()
+    endif ()
 endif ()
 
 if (NOT CMAKE_CXX_COMPILER_ID)
