@@ -34,8 +34,8 @@ endif()
 # path will be created if it doesn't already exist.
 # \param path The path to the repository
 function(git_init path)
-    if (NOT EXISTS ${path})
-        file(MAKE_DIRECTORY ${path})
+    if (NOT EXISTS "${path}")
+        file(MAKE_DIRECTORY "${path}")
     endif ()
 
     execute_process(
