@@ -21,6 +21,8 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
+message(AUTHOR_WARNING "This script is deprecated and will be removed soon. Use GitUtils instead.")
+
 function(get_git_describe_tag git_describe_tag)
     if (NOT GIT_FOUND)
         find_package(Git REQUIRED)
