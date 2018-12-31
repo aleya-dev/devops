@@ -21,8 +21,8 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
-if (NOT TARGET benchmark)
-    message(FATAL_ERROR "Benchmark.cmake requires google benchmark included as submodule.")
+if (NOT TARGET GoogleBenchmark::GoogleBenchmark)
+    message(FATAL_ERROR "Benchmark.cmake requires Google Benchmark (GoogleBenchmark::GoogleBenchmark target is missing)")
 endif ()
 
 include(CMakeParseArguments)
@@ -64,10 +64,13 @@ function(add_benchmark_suite)
 
     target_link_libraries(
         ${BENCHMARK_PARSED_ARGS_TARGET}
-        benchmark
+        GoogleBenchmark::GoogleBenchmark
     )
 
     if (NOT ${BENCHMARK_PARSED_ARGS_NO_BENCHMARK_MAIN})
+        if (NOT TARGET GoogleBenchmark::Main)
+            message(FATAL_ERROR "Benchmark.cmake requires Google Benchmark Main (GoogleBenchmark::Main target is missing)")
+        endif ()
         target_link_libraries(${BENCHMARK_PARSED_ARGS_TARGET} benchmark_main)
     endif ()
 

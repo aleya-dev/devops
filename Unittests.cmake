@@ -21,8 +21,12 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
-if (NOT TARGET gtest)
-    message(FATAL_ERROR "Unittests.cmake requires google test included as submodule.")
+if (NOT TARGET GTest::GTest)
+    message(FATAL_ERROR "Unittests.cmake requires Google Test (GTest::GTest target is missing)")
+endif ()
+
+if (NOT TARGET GTest::GMock)
+    message(FATAL_ERROR "Unittests.cmake requires Google Mock (GTest::GMock target is missing)")
 endif ()
 
 include(CMakeParseArguments)
@@ -62,14 +66,16 @@ function(add_unit_test_suite)
         target_include_directories(${UNIT_TEST_PARSED_ARGS_TARGET} PRIVATE ${UNIT_TEST_PARSED_ARGS_INCLUDES})
     endif ()
 
-    target_link_libraries(
-        ${UNIT_TEST_PARSED_ARGS_TARGET}
-        gtest
-        gmock
+    target_link_libraries(${UNIT_TEST_PARSED_ARGS_TARGET}
+        GTest::GTest
+        GTest::GMock
     )
 
     if (NOT ${UNIT_TEST_PARSED_ARGS_NO_GTEST_MAIN})
-        target_link_libraries(${UNIT_TEST_PARSED_ARGS_TARGET} gtest_main)
+        if (NOT TARGET GTest::Main)
+            message(FATAL_ERROR "Unittests.cmake requires Google Test Main (GTest::Main target is missing)")
+        endif ()
+        target_link_libraries(${UNIT_TEST_PARSED_ARGS_TARGET} GTest::Main)
     endif ()
 
     if (UNIT_TEST_PARSED_ARGS_LIBRARIES)
