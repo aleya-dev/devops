@@ -56,6 +56,22 @@ if (MSVC)
             set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /arch:SSE2")
         endif ()
     endif ()
+
+    set(AEON_ENABLE_COMPILE_TIME_STATS OFF CACHE BOOL "Enable Visual Studio 2017 compiler flags to aid in compile time optimization")
+
+    if (AEON_ENABLE_COMPILE_TIME_STATS)
+        message(" - Enabling compile-time stats")
+        add_compile_options(/d1reportTime)
+    endif ()
+
+    set(AEON_ENABLE_ADDITIONAL_COMPILE_TIME_STATS OFF CACHE BOOL "Enable additional Visual Studio 2017 compiler flags to aid in compile time optimization")
+
+    if (AEON_ENABLE_ADDITIONAL_COMPILE_TIME_STATS)
+        message(" - Enabling additional compile-time stats")
+        add_compile_options(/Bt+)
+        add_compile_options(/d2cgsummary)
+        add_link_options(/time+)
+    endif ()
 endif ()
 
 if (NOT CMAKE_CXX_COMPILER_ID)
