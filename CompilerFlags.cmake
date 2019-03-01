@@ -72,6 +72,18 @@ if (MSVC)
         add_compile_options(/d2cgsummary)
         add_link_options(/time+)
     endif ()
+
+    set(AEON_ENABLE_MSVC_PARALLEL_BUILD ON CACHE BOOL "Enable parallel compilation unit building in Visual Studio")
+
+    # /MP does not play nicely with compile-time stats since the tools require a clean linear build output
+    if (AEON_ENABLE_MSVC_PARALLEL_BUILD)
+        if (AEON_ENABLE_COMPILE_TIME_STATS OR AEON_ENABLE_ADDITIONAL_COMPILE_TIME_STATS)
+            message(" - Parallel build can not be enabled due to additional compile-time stats being enabled.")
+        else ()
+            message(" - Enabling parallel build")
+            add_compile_options(/MP)
+        endif ()
+    endif ()
 endif ()
 
 if (NOT CMAKE_CXX_COMPILER_ID)
