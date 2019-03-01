@@ -7,8 +7,8 @@ if (MSVC)
     if (${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
         message("Clang for Visual Studio detected. Setting flags:")
     else ()
-        if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 19.10)
-            message(FATAL_ERROR "Requires Visual Studio 2017 or higher!")
+        if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 19.20)
+            message(FATAL_ERROR "Requires Visual Studio 2019 or higher!")
         endif ()
 
         message("Visual Studio detected. Setting flags:")
@@ -57,14 +57,14 @@ if (MSVC)
         endif ()
     endif ()
 
-    set(AEON_ENABLE_COMPILE_TIME_STATS OFF CACHE BOOL "Enable Visual Studio 2017 compiler flags to aid in compile time optimization")
+    set(AEON_ENABLE_COMPILE_TIME_STATS OFF CACHE BOOL "Enable Visual Studio compiler flags to aid in compile time optimization")
 
     if (AEON_ENABLE_COMPILE_TIME_STATS)
         message(" - Enabling compile-time stats")
         add_compile_options(/d1reportTime)
     endif ()
 
-    set(AEON_ENABLE_ADDITIONAL_COMPILE_TIME_STATS OFF CACHE BOOL "Enable additional Visual Studio 2017 compiler flags to aid in compile time optimization")
+    set(AEON_ENABLE_ADDITIONAL_COMPILE_TIME_STATS OFF CACHE BOOL "Enable additional Visual Studio compiler flags to aid in compile time optimization")
 
     if (AEON_ENABLE_ADDITIONAL_COMPILE_TIME_STATS)
         message(" - Enabling additional compile-time stats")
