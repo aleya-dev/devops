@@ -3,6 +3,8 @@
 message("Compiler: ${CMAKE_CXX_COMPILER_ID}")
 message("Version: ${CMAKE_CXX_COMPILER_VERSION}")
 
+include(CppSupport)
+
 if (MSVC)
     if (${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
         message("Clang for Visual Studio detected. Setting flags:")
