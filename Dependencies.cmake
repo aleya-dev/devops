@@ -13,6 +13,10 @@ endif ()
 
 if (MSVC)
     set(AEON_EXTERNAL_DEPENDENCIES_PLATFORM "vc2017")
+    set(AEON_EXTERNAL_DEPENDENCIES_EXTENSION "zip")
+elseif (UNIX AND NOT APPLE)
+    set(AEON_EXTERNAL_DEPENDENCIES_PLATFORM "linux_clang")
+    set(AEON_EXTERNAL_DEPENDENCIES_EXTENSION "tar.gz")
 else ()
     message(FATAL_ERROR "The current platform is not supported by the package manager.")
 endif ()
@@ -47,8 +51,8 @@ function(handle_dependencies_file dependencies_file)
                     message(STATUS "[bintray] ${__bintray_package_name} (Version: ${__bintray_package_version}) - Downloading")
 
                     archive_download(
-                        ${AEON_EXTERNAL_DEPENDENCIES_BINTRAY_URL}/${__bintray_package_name}/${AEON_EXTERNAL_DEPENDENCIES_PLATFORM}/${__bintray_package_name}_${__bintray_package_version}.zip
-                        ${AEON_EXTERNAL_DEPENDENCIES_DIR}/${__bintray_package_name}/${__bintray_package_name}_${__bintray_package_version}.zip
+                        ${AEON_EXTERNAL_DEPENDENCIES_BINTRAY_URL}/${__bintray_package_name}/${AEON_EXTERNAL_DEPENDENCIES_PLATFORM}/${__bintray_package_name}_${__bintray_package_version}.${AEON_EXTERNAL_DEPENDENCIES_EXTENSION}
+                        ${AEON_EXTERNAL_DEPENDENCIES_DIR}/${__bintray_package_name}/${__bintray_package_name}_${__bintray_package_version}.${AEON_EXTERNAL_DEPENDENCIES_EXTENSION}
                         ${AEON_EXTERNAL_DEPENDENCIES_DIR}/${__bintray_package_name}
                     )
                 else ()
