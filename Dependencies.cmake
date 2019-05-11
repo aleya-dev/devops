@@ -1,8 +1,5 @@
 # Copyright (c) 2012-2019 Robin Degen
 
-find_package(Git)
-
-include(GitUtils)
 include(ArchiveDownload)
 
 if (DEFINED ENV{AEON_EXTERNAL_DEPENDENCIES_DIR})
@@ -38,7 +35,6 @@ function(handle_dependencies_file dependencies_file)
 
             string(COMPARE EQUAL "${__dependency_directive}" "bintray_url" __is_bintray_url)
             string(COMPARE EQUAL "${__dependency_directive}" "bintray" __is_bintray)
-            string(COMPARE EQUAL "${__dependency_directive}" "git" __is_git)
 
             if (__is_bintray_url)
                 list(GET __line_split 0 AEON_EXTERNAL_DEPENDENCIES_BINTRAY_URL)
@@ -51,12 +47,14 @@ function(handle_dependencies_file dependencies_file)
                 list(GET __line_split 0 __bintray_package_name)
                 list(GET __line_split 1 __bintray_package_version)
 
-                if (NOT EXISTS ${AEON_EXTERNAL_DEPENDENCIES_DIR}/${__bintray_package_name}/${AEON_EXTERNAL_DEPENDENCIES_PLATFORM}/${__bintray_package_name}_${__bintray_package_version})
+                set(__package_sub_path ${__bintray_package_name}/${AEON_EXTERNAL_DEPENDENCIES_PLATFORM}/${__bintray_package_name}_${__bintray_package_version})
+
+                if (NOT EXISTS ${AEON_EXTERNAL_DEPENDENCIES_DIR}/${__package_sub_path})
                     message(STATUS "[bintray] ${__bintray_package_name} (Version: ${AEON_EXTERNAL_DEPENDENCIES_PLATFORM} ${__bintray_package_version}) - Downloading")
 
                     archive_download(
-                        ${AEON_EXTERNAL_DEPENDENCIES_BINTRAY_URL}/${__bintray_package_name}/${AEON_EXTERNAL_DEPENDENCIES_PLATFORM}/${__bintray_package_name}_${__bintray_package_version}.${AEON_EXTERNAL_DEPENDENCIES_EXTENSION}
-                        ${AEON_EXTERNAL_DEPENDENCIES_DIR}/${__bintray_package_name}/${AEON_EXTERNAL_DEPENDENCIES_PLATFORM}/${__bintray_package_name}_${__bintray_package_version}.${AEON_EXTERNAL_DEPENDENCIES_EXTENSION}
+                        ${AEON_EXTERNAL_DEPENDENCIES_BINTRAY_URL}/${__package_sub_path}.${AEON_EXTERNAL_DEPENDENCIES_EXTENSION}
+                        ${AEON_EXTERNAL_DEPENDENCIES_DIR}/${__package_sub_path}.${AEON_EXTERNAL_DEPENDENCIES_EXTENSION}
                         ${AEON_EXTERNAL_DEPENDENCIES_DIR}/${__bintray_package_name}/${AEON_EXTERNAL_DEPENDENCIES_PLATFORM}
                     )
                 else ()
@@ -64,34 +62,13 @@ function(handle_dependencies_file dependencies_file)
                 endif ()
 
                 # Check for dependencies file
-                if (EXISTS ${AEON_EXTERNAL_DEPENDENCIES_DIR}/${__bintray_package_name}/${AEON_EXTERNAL_DEPENDENCIES_PLATFORM}/${__bintray_package_name}_${__bintray_package_version}/dependencies.txt)
-                    handle_dependencies_file(${AEON_EXTERNAL_DEPENDENCIES_DIR}/${__bintray_package_name}/${AEON_EXTERNAL_DEPENDENCIES_PLATFORM}/${__bintray_package_name}_${__bintray_package_version}/dependencies.txt)
+                if (EXISTS ${AEON_EXTERNAL_DEPENDENCIES_DIR}/${__package_sub_path}/dependencies.txt)
+                    handle_dependencies_file(${AEON_EXTERNAL_DEPENDENCIES_DIR}/${__package_sub_path}/dependencies.txt)
                 endif ()
 
                 # Check for package cmake file
-                if (EXISTS ${AEON_EXTERNAL_DEPENDENCIES_DIR}/${__bintray_package_name}/${AEON_EXTERNAL_DEPENDENCIES_PLATFORM}/${__bintray_package_name}_${__bintray_package_version}/package.cmake)
-                    include(${AEON_EXTERNAL_DEPENDENCIES_DIR}/${__bintray_package_name}/${AEON_EXTERNAL_DEPENDENCIES_PLATFORM}/${__bintray_package_name}_${__bintray_package_version}/package.cmake)
-                endif ()
-            elseif (__is_git)
-                if (NOT Git_FOUND)
-                    message(FATAL_ERROR "Git can not be used since the executable could not be found.")
-                endif ()
-
-                list(GET __line_split 0 __git_package_name)
-                list(GET __line_split 1 __git_package_url)
-                list(GET __line_split 2 __git_package_treeish)
-
-                message(STATUS "[git] ${__git_package_url} (Version: ${__git_package_treeish})")
-                git_clone_and_checkout("${AEON_EXTERNAL_DEPENDENCIES_DIR}/${__git_package_name}" ${__git_package_url} ${__git_package_treeish})
-
-                # Check for dependencies file
-                if (EXISTS "${AEON_EXTERNAL_DEPENDENCIES_DIR}/${__git_package_name}/dependencies.txt")
-                    handle_dependencies_file("${AEON_EXTERNAL_DEPENDENCIES_DIR}/${__git_package_name}/dependencies.txt")
-                endif ()
-
-                # Check for package cmake file
-                if (EXISTS "${AEON_EXTERNAL_DEPENDENCIES_DIR}/${__git_package_name}/package.cmake")
-                    include("${AEON_EXTERNAL_DEPENDENCIES_DIR}/${__git_package_name}/package.cmake")
+                if (EXISTS ${AEON_EXTERNAL_DEPENDENCIES_DIR}/${__package_sub_path}/package.cmake)
+                    include(${AEON_EXTERNAL_DEPENDENCIES_DIR}/${__package_sub_path}/package.cmake)
                 endif ()
             endif ()
         endforeach ()
