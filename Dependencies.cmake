@@ -31,34 +31,32 @@ function(handle_dependencies_file dependencies_file)
         foreach (__line ${__dependency_file_lines})
             string(REGEX REPLACE " " ";" __line_split "${__line}")
             list(GET __line_split 0 __dependency_directive)
-            list(REMOVE_AT __line_split 0)
 
-            string(COMPARE EQUAL "${__dependency_directive}" "bintray_url" __is_bintray_url)
-            string(COMPARE EQUAL "${__dependency_directive}" "bintray" __is_bintray)
+            string(COMPARE EQUAL "${__dependency_directive}" "url" __url)
 
-            if (__is_bintray_url)
-                list(GET __line_split 0 AEON_EXTERNAL_DEPENDENCIES_BINTRAY_URL)
-                message(STATUS "Setting Bintray url to ${AEON_EXTERNAL_DEPENDENCIES_BINTRAY_URL}")
-            elseif (__is_bintray)
-                if (NOT AEON_EXTERNAL_DEPENDENCIES_BINTRAY_URL)
-                    message(FATAL_ERROR "Bintray can not be used without setting an url first.")
+            if (__url)
+                list(GET __line_split 1 AEON_EXTERNAL_DEPENDENCIES_URL)
+                message(STATUS "Setting download url to ${AEON_EXTERNAL_DEPENDENCIES_URL}")
+            else ()
+                if (NOT AEON_EXTERNAL_DEPENDENCIES_URL)
+                    message(FATAL_ERROR "Packages can not be downloaded without setting an url first.")
                 endif ()
 
-                list(GET __line_split 0 __bintray_package_name)
-                list(GET __line_split 1 __bintray_package_version)
+                list(GET __line_split 0 __package_name)
+                list(GET __line_split 1 __package_version)
 
-                set(__package_sub_path ${__bintray_package_name}/${AEON_EXTERNAL_DEPENDENCIES_PLATFORM}/${__bintray_package_name}_${__bintray_package_version})
+                set(__package_sub_path ${__package_name}/${AEON_EXTERNAL_DEPENDENCIES_PLATFORM}/${__package_name}_${__package_version})
 
                 if (NOT EXISTS ${AEON_EXTERNAL_DEPENDENCIES_DIR}/${__package_sub_path})
-                    message(STATUS "[bintray] ${__bintray_package_name} (Version: ${AEON_EXTERNAL_DEPENDENCIES_PLATFORM} ${__bintray_package_version}) - Downloading")
+                    message(STATUS "${__package_name} (Version: ${AEON_EXTERNAL_DEPENDENCIES_PLATFORM} ${__package_version}) - Downloading")
 
                     archive_download(
-                        ${AEON_EXTERNAL_DEPENDENCIES_BINTRAY_URL}/${__package_sub_path}.${AEON_EXTERNAL_DEPENDENCIES_EXTENSION}
+                        ${AEON_EXTERNAL_DEPENDENCIES_URL}/${__package_sub_path}.${AEON_EXTERNAL_DEPENDENCIES_EXTENSION}
                         ${AEON_EXTERNAL_DEPENDENCIES_DIR}/${__package_sub_path}.${AEON_EXTERNAL_DEPENDENCIES_EXTENSION}
-                        ${AEON_EXTERNAL_DEPENDENCIES_DIR}/${__bintray_package_name}/${AEON_EXTERNAL_DEPENDENCIES_PLATFORM}
+                        ${AEON_EXTERNAL_DEPENDENCIES_DIR}/${__package_name}/${AEON_EXTERNAL_DEPENDENCIES_PLATFORM}
                     )
                 else ()
-                    message(STATUS "[bintray] ${__bintray_package_name} (Version: ${AEON_EXTERNAL_DEPENDENCIES_PLATFORM} ${__bintray_package_version})")
+                    message(STATUS "${__package_name} (Version: ${AEON_EXTERNAL_DEPENDENCIES_PLATFORM} ${__package_version})")
                 endif ()
 
                 # Check for dependencies file
