@@ -47,26 +47,26 @@ function(handle_dependencies_file dependencies_file)
                 list(GET __line_split 0 __bintray_package_name)
                 list(GET __line_split 1 __bintray_package_version)
 
-                if (NOT EXISTS ${AEON_EXTERNAL_DEPENDENCIES_DIR}/${__bintray_package_name}/${__bintray_package_name}_${__bintray_package_version})
-                    message(STATUS "[bintray] ${__bintray_package_name} (Version: ${__bintray_package_version}) - Downloading")
+                if (NOT EXISTS ${AEON_EXTERNAL_DEPENDENCIES_DIR}/${__bintray_package_name}/${AEON_EXTERNAL_DEPENDENCIES_PLATFORM}/${__bintray_package_name}_${__bintray_package_version})
+                    message(STATUS "[bintray] ${__bintray_package_name} (Version: ${AEON_EXTERNAL_DEPENDENCIES_PLATFORM} ${__bintray_package_version}) - Downloading")
 
                     archive_download(
                         ${AEON_EXTERNAL_DEPENDENCIES_BINTRAY_URL}/${__bintray_package_name}/${AEON_EXTERNAL_DEPENDENCIES_PLATFORM}/${__bintray_package_name}_${__bintray_package_version}.${AEON_EXTERNAL_DEPENDENCIES_EXTENSION}
-                        ${AEON_EXTERNAL_DEPENDENCIES_DIR}/${__bintray_package_name}/${__bintray_package_name}_${__bintray_package_version}.${AEON_EXTERNAL_DEPENDENCIES_EXTENSION}
-                        ${AEON_EXTERNAL_DEPENDENCIES_DIR}/${__bintray_package_name}
+                        ${AEON_EXTERNAL_DEPENDENCIES_DIR}/${__bintray_package_name}/${AEON_EXTERNAL_DEPENDENCIES_PLATFORM}/${__bintray_package_name}_${__bintray_package_version}.${AEON_EXTERNAL_DEPENDENCIES_EXTENSION}
+                        ${AEON_EXTERNAL_DEPENDENCIES_DIR}/${__bintray_package_name}/${AEON_EXTERNAL_DEPENDENCIES_PLATFORM}
                     )
                 else ()
-                    message(STATUS "[bintray] ${__bintray_package_name} (Version: ${__bintray_package_version})")
+                    message(STATUS "[bintray] ${__bintray_package_name} (Version: ${AEON_EXTERNAL_DEPENDENCIES_PLATFORM} ${__bintray_package_version})")
                 endif ()
 
                 # Check for dependencies file
-                if (EXISTS ${AEON_EXTERNAL_DEPENDENCIES_DIR}/${__bintray_package_name}/${__bintray_package_name}_${__bintray_package_version}/dependencies.txt)
-                    handle_dependencies_file(${AEON_EXTERNAL_DEPENDENCIES_DIR}/${__bintray_package_name}/${__bintray_package_name}_${__bintray_package_version}/dependencies.txt)
+                if (EXISTS ${AEON_EXTERNAL_DEPENDENCIES_DIR}/${__bintray_package_name}/${AEON_EXTERNAL_DEPENDENCIES_PLATFORM}/${__bintray_package_name}_${__bintray_package_version}/dependencies.txt)
+                    handle_dependencies_file(${AEON_EXTERNAL_DEPENDENCIES_DIR}/${__bintray_package_name}/${AEON_EXTERNAL_DEPENDENCIES_PLATFORM}/${__bintray_package_name}_${__bintray_package_version}/dependencies.txt)
                 endif ()
 
                 # Check for package cmake file
-                if (EXISTS ${AEON_EXTERNAL_DEPENDENCIES_DIR}/${__bintray_package_name}/${__bintray_package_name}_${__bintray_package_version}/package.cmake)
-                    include(${AEON_EXTERNAL_DEPENDENCIES_DIR}/${__bintray_package_name}/${__bintray_package_name}_${__bintray_package_version}/package.cmake)
+                if (EXISTS ${AEON_EXTERNAL_DEPENDENCIES_DIR}/${__bintray_package_name}/${AEON_EXTERNAL_DEPENDENCIES_PLATFORM}/${__bintray_package_name}_${__bintray_package_version}/package.cmake)
+                    include(${AEON_EXTERNAL_DEPENDENCIES_DIR}/${__bintray_package_name}/${AEON_EXTERNAL_DEPENDENCIES_PLATFORM}/${__bintray_package_name}_${__bintray_package_version}/package.cmake)
                 endif ()
             elseif (__is_git)
                 if (NOT Git_FOUND)
