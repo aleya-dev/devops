@@ -8,6 +8,8 @@ else ()
     get_filename_component(__EXTERNAL_DEPENDENCIES_DIR ${CMAKE_SOURCE_DIR}/external_dependencies REALPATH)
 endif ()
 
+option(AEON_EXTERNAL_DEPENDENCIES_LOCAL "Enable local dependencies" OFF)
+
 if (AEON_EXTERNAL_DEPENDENCIES_LOCAL)
     message(STATUS "Local external dependencies enabled. Downloading stubs.")
     set(AEON_EXTERNAL_DEPENDENCIES_PLATFORM "local")
