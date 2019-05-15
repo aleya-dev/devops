@@ -81,3 +81,7 @@ function(handle_dependencies_file dependencies_file)
         message(STATUS "Dependency file does not exist. Skipping.")
     endif ()
 endfunction()
+
+function(handle_local_dependencies_file)
+    handle_dependencies_file(${CMAKE_CURRENT_SOURCE_DIR}/dependencies.txt)
+endfunction()
