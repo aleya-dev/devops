@@ -1,6 +1,7 @@
 # Copyright (c) 2012-2019 Robin Degen
 
 include(ArchiveDownload)
+include(Logging)
 
 if (DEFINED ENV{AEON_EXTERNAL_DEPENDENCIES_DIR})
     file(TO_CMAKE_PATH "$ENV{AEON_EXTERNAL_DEPENDENCIES_DIR}" __EXTERNAL_DEPENDENCIES_DIR)
@@ -29,7 +30,7 @@ endif ()
 
 set(AEON_EXTERNAL_DEPENDENCIES_DIR "${__EXTERNAL_DEPENDENCIES_DIR}" CACHE FILEPATH "The directory where external dependencies will be downloaded to.")
 
-function(handle_dependencies_file dependencies_file)
+function(__handle_dependencies_file_internal dependencies_file indent)
     if (EXISTS ${dependencies_file})
         file(STRINGS "${dependencies_file}" __dependency_file_lines REGEX "^[^#]")
 
@@ -51,7 +52,7 @@ function(handle_dependencies_file dependencies_file)
                 set(__package_sub_path ${__package_name}/${AEON_EXTERNAL_DEPENDENCIES_PLATFORM}/${__package_name}_${__package_version})
 
                 if (NOT EXISTS ${AEON_EXTERNAL_DEPENDENCIES_DIR}/${__package_sub_path})
-                    message(STATUS "${__package_name} (Version: ${AEON_EXTERNAL_DEPENDENCIES_PLATFORM} ${__package_version}) - Downloading")
+                    log_indent("${__package_name} (Version: ${AEON_EXTERNAL_DEPENDENCIES_PLATFORM} ${__package_version}) - Downloading" ${indent})
 
                     archive_download(
                         ${AEON_EXTERNAL_DEPENDENCIES_URL}/${__package_sub_path}.${AEON_EXTERNAL_DEPENDENCIES_EXTENSION}
@@ -59,12 +60,13 @@ function(handle_dependencies_file dependencies_file)
                         ${AEON_EXTERNAL_DEPENDENCIES_DIR}/${__package_name}/${AEON_EXTERNAL_DEPENDENCIES_PLATFORM}
                     )
                 else ()
-                    message(STATUS "${__package_name} (Version: ${AEON_EXTERNAL_DEPENDENCIES_PLATFORM} ${__package_version})")
+                    log_indent("${__package_name} (Version: ${AEON_EXTERNAL_DEPENDENCIES_PLATFORM} ${__package_version})" ${indent})
                 endif ()
 
                 # Check for dependencies file
                 if (EXISTS ${AEON_EXTERNAL_DEPENDENCIES_DIR}/${__package_sub_path}/dependencies.txt)
-                    handle_dependencies_file(${AEON_EXTERNAL_DEPENDENCIES_DIR}/${__package_sub_path}/dependencies.txt)
+                    math(EXPR __recurse_indent "${indent}+1")
+                    __handle_dependencies_file_internal(${AEON_EXTERNAL_DEPENDENCIES_DIR}/${__package_sub_path}/dependencies.txt ${__recurse_indent})
                 endif ()
 
                 # Check for package cmake file
@@ -76,6 +78,10 @@ function(handle_dependencies_file dependencies_file)
     else ()
         message(STATUS "Dependency file does not exist. Skipping.")
     endif ()
+endfunction()
+
+function(handle_dependencies_file dependencies_file)
+    __handle_dependencies_file_internal(${dependencies_file} 0)
 endfunction()
 
 function(handle_local_dependencies_file)
