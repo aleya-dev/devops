@@ -8,6 +8,9 @@ else ()
     get_filename_component(__EXTERNAL_DEPENDENCIES_DIR ${CMAKE_SOURCE_DIR}/external_dependencies REALPATH)
 endif ()
 
+set(AEON_EXTERNAL_DEPENDENCIES_URL "https://dl.bintray.com/aeon-engine/aeon_dependencies"
+    CACHE STRING "The remote url for downloading external packages.")
+
 option(AEON_EXTERNAL_DEPENDENCIES_LOCAL "Enable local dependencies" OFF)
 
 if (AEON_EXTERNAL_DEPENDENCIES_LOCAL)
@@ -36,19 +39,12 @@ function(handle_dependencies_file dependencies_file)
 
             string(COMPARE EQUAL "${__dependency_directive}" "url" __url)
 
-            if (__url)
-                list(GET __line_split 1 AEON_EXTERNAL_DEPENDENCIES_URL)
-                message(STATUS "Setting download url to ${AEON_EXTERNAL_DEPENDENCIES_URL}")
-            elseif (AEON_EXTERNAL_DEPENDENCIES_LOCAL)
+            if (AEON_EXTERNAL_DEPENDENCIES_LOCAL)
                 list(GET __line_split 0 __package_name)
 
                 message(STATUS "${__package_name} (local)")
                 include(Packages/${__package_name})
             else ()
-                if (NOT AEON_EXTERNAL_DEPENDENCIES_URL)
-                    message(FATAL_ERROR "Packages can not be downloaded without setting an url first.")
-                endif ()
-
                 list(GET __line_split 0 __package_name)
                 list(GET __line_split 1 __package_version)
 
