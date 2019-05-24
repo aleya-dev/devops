@@ -12,7 +12,8 @@ function(archive_download url archive_path destination_path)
 
     if (NOT __download_status_error_nr EQUAL 0)
         list(GET __download_status 1 __download_status_error_description)
-        message(FATAL_ERROR "Error downloading archive: ${__download_status_error_description}.")
+        message(FATAL_ERROR "Could not download url: '${url}'.")
+        message(FATAL_ERROR "${__download_status_error_description}.")
     endif ()
 
     if (NOT EXISTS "${destination_path}")
