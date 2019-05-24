@@ -31,10 +31,13 @@ endfunction()
 
 function(depend_on name)
     string(TOUPPER ${name} name_upper)
-    set(__AEON_COMPONENT_${name_upper}_ENABLED ON CACHE BOOL "" FORCE)
 
-    if (EXISTS ${__AEON_COMPONENT_${name_upper}_PATH}/prerequisites.cmake)
-        include(${__AEON_COMPONENT_${name_upper}_PATH}/prerequisites.cmake)
+    if (NOT __AEON_COMPONENT_${name_upper}_ENABLED)
+        set(__AEON_COMPONENT_${name_upper}_ENABLED ON CACHE BOOL "" FORCE)
+
+        if (EXISTS ${__AEON_COMPONENT_${name_upper}_PATH}/prerequisites.cmake)
+            include(${__AEON_COMPONENT_${name_upper}_PATH}/prerequisites.cmake)
+        endif ()
     endif ()
 endfunction()
 
