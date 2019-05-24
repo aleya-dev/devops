@@ -26,8 +26,7 @@ endfunction()
 
 function(enable_component name)
     string(TOUPPER ${name} name_upper)
-    set(AEON_COMPONENT_${name_upper} ON CACHE BOOL "" FORCE)
-    set(__AEON_COMPONENT_${name_upper}_ENABLED ON CACHE BOOL "" FORCE)
+    set(AEON_COMPONENT_${name_upper} ON CACHE BOOL "")
 endfunction()
 
 function(depend_on name)
