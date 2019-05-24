@@ -98,10 +98,6 @@ if(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU" AND NOT CYGWIN)
     else ()
         message(STATUS "GNU GCC detected. Setting flags:")
 
-        message(STATUS " - CLion Debugger STL Renderer workaround")
-        set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -gdwarf-3")
-        set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -gdwarf-3")
-
         message(STATUS " - Suppressing C++ deprecation warnings.")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated-declarations")
 
