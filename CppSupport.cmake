@@ -2,7 +2,7 @@
 
 include(CheckCXXSourceCompiles)
 
-message("Detecting support for integer std::from_chars")
+message(STATUS "Detecting support for integer std::from_chars")
 
 if (MSVC)
     set(CMAKE_REQUIRED_FLAGS "/std:c++17")
@@ -28,7 +28,7 @@ check_cxx_source_compiles("
         }"
     AEON_COMPILER_HAS_FROM_CHARS_INTEGER)
 
-message("Detecting support for double std::from_chars")
+message(STATUS "Detecting support for double std::from_chars")
 
 check_cxx_source_compiles("
         #include <charconv>

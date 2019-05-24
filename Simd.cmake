@@ -5,7 +5,7 @@
 if (MSVC)
     include(CheckCSourceRuns)
 
-    message("Detecting CPU SIMD capabilities...")
+    message(STATUS "Detecting CPU SIMD capabilities...")
 
     # Check for AVX
     set(CMAKE_REQUIRED_FLAGS "/arch:AVX")
