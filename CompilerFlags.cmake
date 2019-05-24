@@ -18,7 +18,7 @@ if (MSVC)
         message(STATUS " - Enforce latest C++17 ISO standard.")
         message(STATUS " - Disable nodiscard warnings due to build issues with various libraries.")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /WX")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++latest /permissive- /Wv:18")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++latest /permissive-")
     endif ()
 
     message(STATUS " - Defining _SCL_SECURE_NO_WARNINGS")
