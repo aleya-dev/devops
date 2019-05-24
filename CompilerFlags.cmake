@@ -98,9 +98,6 @@ if(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU" AND NOT CYGWIN)
     else ()
         message(STATUS "GNU GCC detected. Setting flags:")
 
-        message(STATUS " - Suppressing C++ deprecation warnings.")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated-declarations")
-
         message(STATUS " - Encourage optimizations for the current architecture (-march=native)")
         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=native")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
