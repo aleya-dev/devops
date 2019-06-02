@@ -92,7 +92,22 @@ if (NOT CMAKE_CXX_COMPILER_ID)
     set(CMAKE_CXX_COMPILER_ID Unknown)
 endif ()
 
-if(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU" AND NOT CYGWIN)
+if (APPLE)
+    if(${CMAKE_CXX_COMPILER_ID} STREQUAL "AppleClang")
+        message(FATAL_ERROR "XCode does not support C++17 properly. Install clang through homebrew.")
+    endif ()
+
+    message(STATUS "Clang on macOS detected. Setting flags:")
+    message(STATUS " - Encourage optimizations for the current architecture (-march=native)")
+    message(STATUS " - Use bundled libc++ rather than Apple's supplied version.")
+
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=native -I/usr/local/opt/llvm/include")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native -I/usr/local/opt/llvm/include")
+
+    link_directories("/usr/local/opt/llvm/lib")
+
+    link_libraries(c++fs)
+elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU" AND NOT CYGWIN)
     if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 7.3)
         message(FATAL_ERROR "Requires GCC 7.3.0 or higher!")
     else ()
@@ -104,9 +119,7 @@ if(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU" AND NOT CYGWIN)
 
         link_libraries(stdc++fs)
     endif ()
-endif ()
-
-if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 7.0)
         message(FATAL_ERROR "Requires Clang 7.0 or higher!")
     else ()
@@ -128,4 +141,3 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
         link_libraries(stdc++fs)
     endif ()
 endif ()
-
