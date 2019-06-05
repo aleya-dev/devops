@@ -1,4 +1,4 @@
-# Copyright (c) 2012-2019 Robin Degen
+# Distributed under the BSD 2-Clause License - Copyright 2012-2019 Robin Degen
 
 if (DEFINED ENV{MONO_DEPENDENCIES_PREFIX})
     file(TO_CMAKE_PATH $ENV{MONO_DEPENDENCIES_PREFIX} MONO_DEPENDENCIES_PREFIX)

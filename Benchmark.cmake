@@ -1,4 +1,4 @@
-# Copyright (c) 2012-2019 Robin Degen
+# Distributed under the BSD 2-Clause License - Copyright 2012-2019 Robin Degen
 
 if (NOT TARGET GoogleBenchmark::GoogleBenchmark)
     message(FATAL_ERROR "Benchmark.cmake requires Google Benchmark (GoogleBenchmark::GoogleBenchmark target is missing)")
