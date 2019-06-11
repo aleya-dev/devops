@@ -8,16 +8,21 @@ find_path(VULKAN_INCLUDE_DIR
     NAMES vulkan/vulkan.h
     PATHS
         "${VULKAN_SDK}/Include"
+        "C:/VulkanSDK/1.1.106.0/Include"
 )
 
 find_library(VULKAN_LIBRARY
-    NAMES vulkan
-    PATHS "${VULKAN_SDK}/lib"
+    NAMES vulkan vulkan-1
+    PATHS
+        "${VULKAN_SDK}/lib"
+        "C:/VulkanSDK/1.1.106.0/lib"
 )
 
 find_program(VULKAN_GLSLANG_VALIDATOR
     NAMES glslangValidator
-    PATHS "${VULKAN_SDK}/bin"
+    PATHS
+        "${VULKAN_SDK}/bin"
+        "C:/VulkanSDK/1.1.106.0/bin"
 )
 
 set(VULKAN_LIBRARIES ${VULKAN_LIBRARY})
