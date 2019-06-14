@@ -42,17 +42,30 @@ function(depend_on name)
 endfunction()
 
 function(list_components)
-    message(STATUS "-----------------------------------------")
+    set(__column_width 16)
+    foreach(__COMPONENT ${__AEON_AVAILABLE_COMPONENTS})
+        string(LENGTH ${__COMPONENT} __length)
+        if (__column_width LESS __length)
+            math(EXPR __column_width "${__length} + 1")
+        endif ()
+    endforeach()
+
+    math(EXPR __total_width "${__column_width} * 3")
+
+    log_hline(${__total_width})
     message(STATUS " Enabled components")
-    message(STATUS "-----------------------------------------")
-    log_columns("Component;| Requested;| Enabled" 16)
+    log_hline(${__total_width})
+    log_columns("Component;| Requested;| Enabled" ${__column_width})
 
     foreach(__COMPONENT ${__AEON_AVAILABLE_COMPONENTS})
         string(TOUPPER ${__COMPONENT} name_upper)
-        log_columns("${__COMPONENT};| ${AEON_COMPONENT_${name_upper}};| ${__AEON_COMPONENT_${name_upper}_ENABLED}" 16)
+        log_columns(
+            "${__COMPONENT};| ${AEON_COMPONENT_${name_upper}};| ${__AEON_COMPONENT_${name_upper}_ENABLED}"
+            ${__column_width}
+        )
     endforeach()
 
-    message(STATUS "-----------------------------------------")
+    log_hline(${__total_width})
 endfunction()
 
 function(__disable_all_components)
