@@ -19,3 +19,8 @@ function(log_columns columns width)
     string(STRIP "${__msg}" __msg)
     message(STATUS "${__msg}")
 endfunction()
+
+function(log_hline width)
+    string_repeat("-" ${width} __hline)
+    message(STATUS ${__hline})
+endfunction()
