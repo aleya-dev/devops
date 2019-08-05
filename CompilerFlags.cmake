@@ -119,7 +119,7 @@ elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU" AND NOT CYGWIN)
 
         link_libraries(stdc++fs)
     endif ()
-elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND NOT MSVC)
     if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 7.0)
         message(FATAL_ERROR "Requires Clang 7.0 or higher!")
     else ()
