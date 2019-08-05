@@ -99,6 +99,11 @@ function(__include_enabled_components)
     endforeach()
 endfunction()
 
+function(check_component_enabled name out)
+    string(TOUPPER ${name} name_upper)
+    set(${out} ${__AEON_COMPONENT_${name_upper}_ENABLED} PARENT_SCOPE)
+endfunction()
+
 function(finalize_components)
     __disable_all_components()
     __handle_component_prerequisites()
