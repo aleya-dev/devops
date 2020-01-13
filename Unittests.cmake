@@ -70,6 +70,11 @@ function(add_unit_test_suite)
         COMMAND $<TARGET_FILE:${UNIT_TEST_PARSED_ARGS_TARGET}> "--gtest_output=xml:${UNIT_TEST_PARSED_ARGS_TARGET}.xml"
     )
 
+    if (UNIX AND NOT APPLE)
+        set_tests_properties(${UNIT_TEST_PARSED_ARGS_TARGET} PROPERTIES
+            ENVIRONMENT LD_LIBRARY_PATH=$<TARGET_FILE_DIR:${UNIT_TEST_PARSED_ARGS_TARGET}>:$ENV{LD_LIBRARY_PATH})
+    endif ()
+
     list(APPEND UNIT_TEST_PARSED_ARGS_LABELS "unittest")
     set_tests_properties(${UNIT_TEST_PARSED_ARGS_TARGET} PROPERTIES LABELS "${UNIT_TEST_PARSED_ARGS_LABELS}")
 endfunction()
