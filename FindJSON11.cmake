@@ -1,4 +1,4 @@
-# Distributed under the BSD 2-Clause License - Copyright 2012-2019 Robin Degen
+# Distributed under the BSD 2-Clause License - Copyright 2012-2020 Robin Degen
 
 find_path(JSON11_INCLUDE_DIRS json11.hpp
     DOC
