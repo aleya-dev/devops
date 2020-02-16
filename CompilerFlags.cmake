@@ -26,6 +26,9 @@ if (MSVC)
     message(STATUS " - Extended Alignment fix: Instantiated std::aligned_storage<Len, Align> with an extended alignment. (_ENABLE_EXTENDED_ALIGNED_STORAGE)")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_ENABLE_ATOMIC_ALIGNMENT_FIX -D_ENABLE_EXTENDED_ALIGNED_STORAGE -DNOMINMAX -D_WIN32_WINNT=0x0601 /W4")
 
+    # Make sure the correct C++ version is reported through the __cplusplus macro.
+    add_compile_options(/Zc:__cplusplus)
+
     if (AEON_ENABLE_UNICODE)
         message(STATUS " - Using Unicode")
         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_UNICODE -DUNICODE")
