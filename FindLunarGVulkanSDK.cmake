@@ -9,6 +9,7 @@ find_path(VULKAN_INCLUDE_DIR
     PATHS
         "${VULKAN_SDK}/Include"
         "C:/VulkanSDK/1.1.106.0/Include"
+        "C:/VulkanSDK/1.2.131.2/Include"
 )
 
 find_library(VULKAN_LIBRARY
@@ -16,6 +17,7 @@ find_library(VULKAN_LIBRARY
     PATHS
         "${VULKAN_SDK}/lib"
         "C:/VulkanSDK/1.1.106.0/lib"
+        "C:/VulkanSDK/1.2.131.2/lib"
 )
 
 find_program(VULKAN_GLSLANG_VALIDATOR
@@ -23,6 +25,7 @@ find_program(VULKAN_GLSLANG_VALIDATOR
     PATHS
         "${VULKAN_SDK}/bin"
         "C:/VulkanSDK/1.1.106.0/bin"
+        "C:/VulkanSDK/1.2.131.2/bin"
 )
 
 set(VULKAN_LIBRARIES ${VULKAN_LIBRARY})
