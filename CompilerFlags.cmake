@@ -8,6 +8,10 @@ include(CppSupport)
 if (MSVC)
     if (${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
         message(STATUS "Clang for Visual Studio detected. Setting flags:")
+        # The <experimental/coroutine>, <experimental/generator>, and <experimental/resumable> headers currently do not support Clang.
+        # You can define _SILENCE_CLANG_COROUTINE_MESSAGE to silence this message and acknowledge that this is unsupported.
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_SILENCE_CLANG_COROUTINE_MESSAGE")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_SILENCE_CLANG_COROUTINE_MESSAGE")
     else ()
         if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 19.20)
             message(FATAL_ERROR "Requires Visual Studio 2019 or higher!")
