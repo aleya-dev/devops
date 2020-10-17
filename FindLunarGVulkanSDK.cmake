@@ -8,25 +8,58 @@ find_path(VULKAN_INCLUDE_DIR
     NAMES vulkan/vulkan.h
     PATHS
         "${VULKAN_SDK}/Include"
-        "C:/VulkanSDK/1.1.106.0/Include"
-        "C:/VulkanSDK/1.2.131.2/Include"
 )
 
 find_library(VULKAN_LIBRARY
     NAMES vulkan vulkan-1
     PATHS
         "${VULKAN_SDK}/lib"
-        "C:/VulkanSDK/1.1.106.0/lib"
-        "C:/VulkanSDK/1.2.131.2/lib"
 )
 
 find_program(VULKAN_GLSLANG_VALIDATOR
     NAMES glslangValidator
     PATHS
         "${VULKAN_SDK}/bin"
-        "C:/VulkanSDK/1.1.106.0/bin"
-        "C:/VulkanSDK/1.2.131.2/bin"
 )
+
+# On windows, also search the default install location
+if (WIN32 AND NOT VULKAN_INCLUDE_DIR OR NOT VULKAN_LIBRARY OR NOT VULKAN_GLSLANG_VALIDATOR)
+    set(__VULKAN_WINDOWS_PREFIX "C:/VulkanSDK/")
+
+    if (EXISTS "${__VULKAN_WINDOWS_PREFIX}")
+        file(GLOB __VULKAN_WINDOWS_VERSIONS RELATIVE "${__VULKAN_WINDOWS_PREFIX}" "${__VULKAN_WINDOWS_PREFIX}/*")
+        # Sorting versions alphabetically isn't perfect, but good enough. It's not typical to install multiple versions anyway.
+        list(SORT __VULKAN_WINDOWS_VERSIONS)
+        list(REVERSE __VULKAN_WINDOWS_VERSIONS)
+
+        foreach(__VULKAN_WINDOWS_VERSION ${__VULKAN_WINDOWS_VERSIONS})
+            find_path(VULKAN_INCLUDE_DIR
+                NAMES vulkan/vulkan.h
+                PATHS "${__VULKAN_WINDOWS_PREFIX}${__VULKAN_WINDOWS_VERSION}/Include"
+            )
+
+            find_library(VULKAN_LIBRARY
+                NAMES vulkan vulkan-1
+                PATHS "${__VULKAN_WINDOWS_PREFIX}${__VULKAN_WINDOWS_VERSION}/lib"
+            )
+
+            find_program(VULKAN_GLSLANG_VALIDATOR
+                NAMES glslangValidator
+                PATHS "${__VULKAN_WINDOWS_PREFIX}${__VULKAN_WINDOWS_VERSION}/bin"
+            )
+
+            if (VULKAN_INCLUDE_DIR AND VULKAN_LIBRARY AND VULKAN_GLSLANG_VALIDATOR)
+                message("Vulkan version: ${__VULKAN_WINDOWS_VERSION}")
+                break()
+            endif ()
+
+            # Unset all variables to make sure that versions are not mixed.
+            unset(VULKAN_INCLUDE_DIR)
+            unset(VULKAN_LIBRARY)
+            unset(VULKAN_GLSLANG_VALIDATOR)
+        endforeach()
+    endif ()
+endif ()
 
 set(VULKAN_LIBRARIES ${VULKAN_LIBRARY})
 set(VULKAN_INCLUDE_DIRS ${VULKAN_INCLUDE_DIR})
