@@ -24,11 +24,16 @@ if (MSVC)
     endif ()
 
     message(STATUS " - Defining NOMINMAX")
-    message(STATUS " - Setting Windows 7 API level (_WIN32_WINNT=0x0601)")
+    message(STATUS " - Setting Windows 10 API level (WINVER=_WIN32_WINNT_WIN10, _WIN32_WINNT=_WIN32_WINNT_WIN10)")
     message(STATUS " - Setting Warning Level 4")
     message(STATUS " - Atomic Alignment fix: Instantiated std::atomic<T> with sizeof(T) equal to 2/4/8 and alignof(T) < sizeof(T). (_ENABLE_ATOMIC_ALIGNMENT_FIX)")
     message(STATUS " - Extended Alignment fix: Instantiated std::aligned_storage<Len, Align> with an extended alignment. (_ENABLE_EXTENDED_ALIGNED_STORAGE)")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_ENABLE_ATOMIC_ALIGNMENT_FIX -D_ENABLE_EXTENDED_ALIGNED_STORAGE -DNOMINMAX -D_WIN32_WINNT=0x0601 /W4")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_ENABLE_ATOMIC_ALIGNMENT_FIX")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_ENABLE_EXTENDED_ALIGNED_STORAGE")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DNOMINMAX")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DWINVER=_WIN32_WINNT_WIN10")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_WIN32_WINNT=_WIN32_WINNT_WIN10")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
 
     # Make sure the correct C++ version is reported through the __cplusplus macro.
     add_compile_options(/Zc:__cplusplus)
