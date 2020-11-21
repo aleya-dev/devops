@@ -7,6 +7,7 @@ find_path(ASIO_INCLUDE_DIRS asio.hpp
         ASIO_ROOT
     PATH_SUFFIXES
         include
+        include/asio
 )
 
 include(FindPackageHandleStandardArgs)
