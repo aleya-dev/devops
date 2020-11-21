@@ -153,3 +153,14 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND NOT MSVC)
         link_libraries(stdc++fs)
     endif ()
 endif ()
+
+# This detection for ARM devices is incomplete.
+# I can improve this once I have more devices to test with.
+# For certain devices it is likely that additional flags are required (NEON, soft float etc.)
+if (UNIX AND NOT APPLE)
+    if (CMAKE_SYSTEM_PROCESSOR MATCHES "arm" OR CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64")
+        message(STATUS "Detected ARM CPU. Disabling possible SSE/AVX code (AEON_DISABLE_SSE).")
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DAEON_DISABLE_SSE")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DAEON_DISABLE_SSE")
+    endif ()
+endif ()
