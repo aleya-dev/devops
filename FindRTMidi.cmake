@@ -7,10 +7,11 @@ find_path(RTMidi_INCLUDE_DIRS RtMidi.h
         RTMidi_ROOT
     PATH_SUFFIXES
         include
+        include/rtmidi
 )
 
 find_library(RTMidi_LIBRARIES
-    NAMES librtmidi.so rtmidi
+    NAMES librtmidi.so librtmidi rtmidi
     DOC "Found RTMidi library path"
     ENV
         RTMidi_ROOT
