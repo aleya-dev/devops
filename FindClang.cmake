@@ -1,6 +1,12 @@
 # Distributed under the BSD 2-Clause License - Copyright 2012-2020 Robin Degen
 
-find_program(LLVM_CONFIG_EXECUTABLE llvm-config)
+find_program(LLVM_CONFIG_EXECUTABLE
+    NAMES
+        llvm-config
+        llvm-config-9
+        llvm-config-10
+        llvm-config-11
+)
 
 if (NOT LLVM_CONFIG_EXECUTABLE)
     message(FATAL_ERROR "Could not find llvm-config.")
