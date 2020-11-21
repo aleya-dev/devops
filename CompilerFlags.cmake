@@ -120,8 +120,8 @@ if (APPLE)
 
     link_libraries(c++fs)
 elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU" AND NOT CYGWIN)
-    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 7.3)
-        message(FATAL_ERROR "Requires GCC 7.3.0 or higher!")
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 10.0)
+        message(FATAL_ERROR "Requires GCC 10.0 or higher!")
     else ()
         message(STATUS "GNU GCC detected. Setting flags:")
 
