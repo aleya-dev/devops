@@ -6,6 +6,8 @@ message(STATUS "Version: ${CMAKE_CXX_COMPILER_VERSION}")
 include(CppSupport)
 
 if (MSVC)
+    set(AEON_DISABLE_ITERATOR_DEBUGGING ON CACHE BOOL "Disable Visual Studio iterator debugging")
+
     if (${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
         message(STATUS "Clang for Visual Studio detected. Setting flags:")
         # The <experimental/coroutine>, <experimental/generator>, and <experimental/resumable> headers currently do not support Clang.
@@ -34,6 +36,12 @@ if (MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DWINVER=_WIN32_WINNT_WIN10")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_WIN32_WINNT=_WIN32_WINNT_WIN10")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
+
+    if (AEON_DISABLE_ITERATOR_DEBUGGING)
+        message(STATUS " - Disable iterator debugging")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_ITERATOR_DEBUG_LEVEL=0")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH")
+    endif ()
 
     # Make sure the correct C++ version is reported through the __cplusplus macro.
     add_compile_options(/Zc:__cplusplus)
