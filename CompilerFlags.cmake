@@ -6,7 +6,7 @@ message(STATUS "Version: ${CMAKE_CXX_COMPILER_VERSION}")
 include(CppSupport)
 
 if (MSVC)
-    set(AEON_DISABLE_ITERATOR_DEBUGGING ON CACHE BOOL "Disable Visual Studio iterator debugging")
+    set(AEON_DISABLE_ITERATOR_DEBUGGING OFF CACHE BOOL "Disable Visual Studio iterator debugging")
 
     if (${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
         message(STATUS "Clang for Visual Studio detected. Setting flags:")
