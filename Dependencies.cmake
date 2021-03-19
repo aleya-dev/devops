@@ -9,7 +9,7 @@ else ()
     get_filename_component(__EXTERNAL_DEPENDENCIES_DIR ${CMAKE_SOURCE_DIR}/external_dependencies REALPATH)
 endif ()
 
-set(AEON_EXTERNAL_DEPENDENCIES_URL "https://dl.bintray.com/aeon-engine/aeon_dependencies"
+set(AEON_EXTERNAL_DEPENDENCIES_URL "https://packages.aeons.dev/legacy/"
     CACHE STRING "The remote url for downloading external packages.")
 
 option(AEON_EXTERNAL_DEPENDENCIES_LOCAL "Enable local dependencies" OFF)
