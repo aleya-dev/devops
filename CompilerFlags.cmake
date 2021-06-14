@@ -172,3 +172,8 @@ if (UNIX AND NOT APPLE)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DAEON_DISABLE_SSE")
     endif ()
 endif ()
+
+# On Visual Studio (not ClangCL), hide the warning that a pdb file could not be found.
+if (MSVC AND NOT CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    add_link_options("/ignore:4099")
+endif ()
