@@ -1,7 +1,7 @@
 # Distributed under the BSD 2-Clause License - Copyright 2012-2021 Robin Degen
 
-if (NOT TARGET GoogleBenchmark::GoogleBenchmark)
-    message(FATAL_ERROR "Benchmark.cmake requires Google Benchmark (GoogleBenchmark::GoogleBenchmark target is missing)")
+if (NOT TARGET GoogleBenchmark::GoogleBenchmark AND NOT TARGET CONAN_PKG::benchmark)
+    message(FATAL_ERROR "Benchmark.cmake requires Google Benchmark (GoogleBenchmark::GoogleBenchmark or CONAN_PKG::benchmark target is missing)")
 endif ()
 
 include(CMakeParseArguments)
@@ -41,16 +41,26 @@ function(add_benchmark_suite)
         target_include_directories(${BENCHMARK_PARSED_ARGS_TARGET} PRIVATE ${BENCHMARK_PARSED_ARGS_INCLUDES})
     endif ()
 
-    target_link_libraries(
-        ${BENCHMARK_PARSED_ARGS_TARGET}
-        GoogleBenchmark::GoogleBenchmark
-    )
+    if (TARGET GoogleBenchmark::GoogleBenchmark)
+        target_link_libraries(
+            ${BENCHMARK_PARSED_ARGS_TARGET}
+            GoogleBenchmark::GoogleBenchmark
+        )
+    else ()
+        target_link_libraries(
+            ${BENCHMARK_PARSED_ARGS_TARGET}
+            CONAN_PKG::benchmark
+        )
+    endif ()
 
     if (NOT ${BENCHMARK_PARSED_ARGS_NO_BENCHMARK_MAIN})
-        if (NOT TARGET GoogleBenchmark::Main)
+        if (NOT TARGET GoogleBenchmark::Main AND NOT TARGET CONAN_PKG::benchmark)
             message(FATAL_ERROR "Benchmark.cmake requires Google Benchmark Main (GoogleBenchmark::Main target is missing)")
         endif ()
-        target_link_libraries(${BENCHMARK_PARSED_ARGS_TARGET} benchmark_main)
+
+        if (TARGET GoogleBenchmark::Main)
+            target_link_libraries(${BENCHMARK_PARSED_ARGS_TARGET} GoogleBenchmark::Main)
+        endif ()
     endif ()
 
     if (BENCHMARK_PARSED_ARGS_LIBRARIES)

@@ -1,11 +1,11 @@
 # Distributed under the BSD 2-Clause License - Copyright 2012-2021 Robin Degen
 
-if (NOT TARGET GTest::GTest)
-    message(FATAL_ERROR "Unittests.cmake requires Google Test (GTest::GTest target is missing)")
+if (NOT TARGET GTest::GTest AND NOT TARGET CONAN_PKG::gtest)
+    message(FATAL_ERROR "Unittests.cmake requires Google Test (GTest::GTest or CONAN_PKG::gtest target is missing)")
 endif ()
 
-if (NOT TARGET GTest::GMock)
-    message(FATAL_ERROR "Unittests.cmake requires Google Mock (GTest::GMock target is missing)")
+if (NOT TARGET GTest::GMock AND NOT TARGET CONAN_PKG::gtest)
+    message(FATAL_ERROR "Unittests.cmake requires Google Mock (GTest::GMock or CONAN_PKG::gtest target is missing)")
 endif ()
 
 include(CMakeParseArguments)
@@ -45,16 +45,25 @@ function(add_unit_test_suite)
         target_include_directories(${UNIT_TEST_PARSED_ARGS_TARGET} PRIVATE ${UNIT_TEST_PARSED_ARGS_INCLUDES})
     endif ()
 
-    target_link_libraries(${UNIT_TEST_PARSED_ARGS_TARGET}
-        GTest::GTest
-        GTest::GMock
-    )
+    if (TARGET GTest::GTest AND TARGET GTest::GMock)
+        target_link_libraries(${UNIT_TEST_PARSED_ARGS_TARGET}
+            GTest::GTest
+            GTest::GMock
+        )
+    else ()
+        target_link_libraries(${UNIT_TEST_PARSED_ARGS_TARGET}
+            CONAN_PKG::gtest
+        )
+    endif ()
 
     if (NOT ${UNIT_TEST_PARSED_ARGS_NO_GTEST_MAIN})
-        if (NOT TARGET GTest::Main)
-            message(FATAL_ERROR "Unittests.cmake requires Google Test Main (GTest::Main target is missing)")
+        if (NOT TARGET GTest::Main AND NOT TARGET CONAN_PKG::gtest)
+            message(FATAL_ERROR "Unittests.cmake requires Google Test Main (GTest::Main or CONAN_PKG:: target is missing)")
         endif ()
-        target_link_libraries(${UNIT_TEST_PARSED_ARGS_TARGET} GTest::Main)
+
+        if (TARGET GTest::Main)
+            target_link_libraries(${UNIT_TEST_PARSED_ARGS_TARGET} GTest::Main)
+        endif ()
     endif ()
 
     if (UNIT_TEST_PARSED_ARGS_LIBRARIES)
