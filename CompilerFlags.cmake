@@ -134,8 +134,9 @@ elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU" AND NOT CYGWIN)
         message(STATUS "GNU GCC detected. Setting flags:")
 
         message(STATUS " - Encourage optimizations for the current architecture (-march=native)")
-        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=native")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
+        message(STATUS " - Enable Position Independent Code (-fPIC)")
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=native -fPIC")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native -fPIC")
 
         link_libraries(stdc++fs)
     endif ()
