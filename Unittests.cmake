@@ -4,8 +4,8 @@ if (NOT TARGET GTest::GTest AND NOT TARGET CONAN_PKG::gtest)
     message(FATAL_ERROR "Unittests.cmake requires Google Test (GTest::GTest or CONAN_PKG::gtest target is missing)")
 endif ()
 
-if (NOT TARGET GTest::GMock AND NOT TARGET CONAN_PKG::gtest)
-    message(FATAL_ERROR "Unittests.cmake requires Google Mock (GTest::GMock or CONAN_PKG::gtest target is missing)")
+if (NOT TARGET GTest::gmock AND NOT TARGET CONAN_PKG::gtest)
+    message(FATAL_ERROR "Unittests.cmake requires Google Mock (GTest::gmock or CONAN_PKG::gtest target is missing)")
 endif ()
 
 include(CMakeParseArguments)
@@ -45,10 +45,10 @@ function(add_unit_test_suite)
         target_include_directories(${UNIT_TEST_PARSED_ARGS_TARGET} PRIVATE ${UNIT_TEST_PARSED_ARGS_INCLUDES})
     endif ()
 
-    if (TARGET GTest::GTest AND TARGET GTest::GMock)
+    if (TARGET GTest::GTest AND TARGET GTest::gmock)
         target_link_libraries(${UNIT_TEST_PARSED_ARGS_TARGET}
             GTest::GTest
-            GTest::GMock
+            GTest::gmock
         )
     else ()
         target_link_libraries(${UNIT_TEST_PARSED_ARGS_TARGET}
