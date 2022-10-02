@@ -1,4 +1,4 @@
-# Distributed under the BSD 2-Clause License - Copyright 2012-2021 Robin Degen
+# Distributed under the BSD 2-Clause License - Copyright 2012-2022 Robin Degen
 
 if (NOT AEON_ARCHITECTURE_SUFFIX_SET)
     if (CMAKE_SIZEOF_VOID_P EQUAL 8)

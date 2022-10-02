@@ -1,4 +1,4 @@
-# Distributed under the BSD 2-Clause License - Copyright 2012-2021 Robin Degen
+# Distributed under the BSD 2-Clause License - Copyright 2012-2022 Robin Degen
 
 # Currently only detection on Visual Studio is supported (and required).
 # For GCC and Clang, use -march=native.

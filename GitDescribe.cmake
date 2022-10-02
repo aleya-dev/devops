@@ -1,4 +1,4 @@
-# Distributed under the BSD 2-Clause License - Copyright 2012-2021 Robin Degen
+# Distributed under the BSD 2-Clause License - Copyright 2012-2022 Robin Degen
 
 message(AUTHOR_WARNING "This script is deprecated and will be removed soon. Use GitUtils instead.")
 

@@ -1,4 +1,4 @@
-# Distributed under the BSD 2-Clause License - Copyright 2012-2021 Robin Degen
+# Distributed under the BSD 2-Clause License - Copyright 2012-2022 Robin Degen
 
 if (NOT VULKAN_FOUND OR NOT VULKAN_GLSLANG_VALIDATOR)
     message(FATAL_ERROR "The Lunar-G vulkan SDK is required to compile Vulkan GLSL code.")
