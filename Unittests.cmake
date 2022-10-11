@@ -37,9 +37,13 @@ function(add_unit_test_suite)
         set_target_properties(
             ${UNIT_TEST_PARSED_ARGS_TARGET} PROPERTIES
             FOLDER ${UNIT_TEST_PARSED_ARGS_FOLDER}
-            RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
         )
     endif ()
+
+    set_target_properties(
+        ${UNIT_TEST_PARSED_ARGS_TARGET} PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+    )
 
     if (UNIT_TEST_PARSED_ARGS_INCLUDES)
         target_include_directories(${UNIT_TEST_PARSED_ARGS_TARGET} PRIVATE ${UNIT_TEST_PARSED_ARGS_INCLUDES})
