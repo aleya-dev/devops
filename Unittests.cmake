@@ -43,6 +43,7 @@ function(add_unit_test_suite)
     set_target_properties(
         ${UNIT_TEST_PARSED_ARGS_TARGET} PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+        VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/bin/$(Configuration)"
     )
 
     if (UNIT_TEST_PARSED_ARGS_INCLUDES)
