@@ -2,26 +2,29 @@
 
 include(Architecture)
 
-function(__conan_install_internal conan_executable config)
-    message(STATUS "Running conan install for ${config}...")
+set(__CONAN_CMAKE_LIST_DIR ${CMAKE_CURRENT_LIST_DIR})
 
-    if (AEON_ARCHITECTURE_32_BIT)
-        set(__CONAN_ARCH_NAME "x86")
+function(__conan_install_internal conan_executable profile_path)
+    message(STATUS "Running conan install with profile ${profile_path}...")
+
+    if (profile_path)
+        execute_process(
+            COMMAND ${conan_executable} install .
+                -of "${CMAKE_BINARY_DIR}"
+                -pr "${profile_path}"
+            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+            RESULT_VARIABLE CONAN_INSTALL_RESULT
+            COMMAND_ERROR_IS_FATAL ANY
+        )
     else ()
-        set(__CONAN_ARCH_NAME "x86_64")
+        execute_process(
+            COMMAND ${conan_executable} install .
+                -of "${CMAKE_BINARY_DIR}"
+            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+            RESULT_VARIABLE CONAN_INSTALL_RESULT
+            COMMAND_ERROR_IS_FATAL ANY
+        )
     endif ()
-
-    execute_process(
-        COMMAND ${conan_executable} install .
-            -of "${CMAKE_BINARY_DIR}"
-            -s "build_type=${config}"
-            -s "arch=${__CONAN_ARCH_NAME}"
-            -s "compiler.cppstd=${CMAKE_CXX_STANDARD}"
-            -s "compiler.runtime_type=${config}"
-        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-        RESULT_VARIABLE CONAN_INSTALL_RESULT
-        COMMAND_ERROR_IS_FATAL ANY
-    )
 
     if (NOT CONAN_INSTALL_RESULT EQUAL 0)
         message(FATAL_ERROR "Could not run conan install for config: ${config}.")
@@ -38,11 +41,27 @@ function(conan_install)
 
     message(STATUS "Found conan: ${CONAN_EXECUTABLE}")
 
-    # If the build type is not set; assume multiconfig
-    if (CMAKE_BUILD_TYPE)
-        __conan_install_internal("${CONAN_EXECUTABLE}" ${CMAKE_BUILD_TYPE})
+    set(__conan_profile_path ${__CONAN_CMAKE_LIST_DIR}/../Conan/profiles)
+
+    # Install with the correct profile
+    if (MSVC)
+        # In Visual Studio we need to use multi-config
+        if (AEON_ARCHITECTURE_32_BIT)
+            __conan_install_internal("${CONAN_EXECUTABLE}" "${__conan_profile_path}/windows/msvc2022_x86_debug")
+            __conan_install_internal("${CONAN_EXECUTABLE}" "${__conan_profile_path}/windows/msvc2022_x86_release")
+        else ()
+            __conan_install_internal("${CONAN_EXECUTABLE}" "${__conan_profile_path}/windows/msvc2022_x86_64_debug")
+            __conan_install_internal("${CONAN_EXECUTABLE}" "${__conan_profile_path}/windows/msvc2022_x86_64_release")
+        endif ()
+    elseif (CMAKE_SYSTEM_NAME STREQUAL "Linux")
+        string(TOLOWER ${CMAKE_BUILD_TYPE} __config)
+        if (AEON_ARCHITECTURE_32_BIT)
+            __conan_install_internal("${CONAN_EXECUTABLE}" "${__conan_profile_path}/linux/gcc12_x86_${__config}")
+        else ()
+            __conan_install_internal("${CONAN_EXECUTABLE}" "${__conan_profile_path}/linux/gcc12_x86_64_${__config}")
+        endif ()
     else ()
-        __conan_install_internal("${CONAN_EXECUTABLE}" "Debug")
-        __conan_install_internal("${CONAN_EXECUTABLE}" "Release")
+        # Otherwise, assume the default profile
+        __conan_install_internal("${CONAN_EXECUTABLE}" "")
     endif ()
 endfunction()
