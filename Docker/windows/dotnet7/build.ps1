@@ -1,0 +1,1 @@
+docker build -t aeon_ci/aleya_windows_vs2022 .

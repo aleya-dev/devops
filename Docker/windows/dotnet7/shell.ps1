@@ -1,0 +1,1 @@
+docker run --entrypoint "Powershell" -it aeon_ci/aleya_windows_vs2022 Powershell
