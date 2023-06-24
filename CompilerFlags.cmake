@@ -4,6 +4,7 @@ message(STATUS "Compiler: ${CMAKE_CXX_COMPILER_ID}")
 message(STATUS "Version: ${CMAKE_CXX_COMPILER_VERSION}")
 
 include(CppSupport)
+include(Architecture)
 
 if (MSVC)
     set(AEON_DISABLE_ITERATOR_DEBUGGING OFF CACHE BOOL "Disable Visual Studio iterator debugging")
@@ -36,6 +37,13 @@ if (MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DWINVER=_WIN32_WINNT_WIN10")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_WIN32_WINNT=_WIN32_WINNT_WIN10")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
+
+    # 32-bit Visual Studio complains a lot about conversions ("Possible loss of data", "signed/unsigned mismatch").
+    # Instead of littering the code with casts, just ignore the warning for now until there is a better solution
+    if (AEON_ARCHITECTURE_32_BIT)
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4018 /wd4244")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4018 /wd4244")
+    endif ()
 
     if (AEON_DISABLE_ITERATOR_DEBUGGING)
         message(STATUS " - Disable iterator debugging")
