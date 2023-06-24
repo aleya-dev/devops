@@ -31,5 +31,7 @@ class LibJpegTurboConan(ConanFile):
         self.cpp_info.set_property("cmake_module_file_name", "JPEG")
         self.cpp_info.set_property("cmake_file_name", "libjpeg-turbo")
 
-        self.cpp_info.components["turbojpeg"].libs = ["turbojpeg-static"]
+        postfix = "-static" if self.settings.os == "Windows" and not self._is_mingw else ""
+
+        self.cpp_info.components["turbojpeg"].libs = ["turbojpeg" + postfix]
         self.cpp_info.components["turbojpeg"].set_property("cmake_target_name", "libjpeg-turbo::turbojpeg-static")
