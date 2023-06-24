@@ -1,0 +1,23 @@
+<Project>
+
+  <PropertyGroup>
+    <TargetFramework>@__AEON_DOTNET_TARGET_FRAMEWORK@</TargetFramework>
+    <ImplicitUsings>@__AEON_DOTNET_IMPLICIT_USINGS@</ImplicitUsings>
+    <Nullable>@__AEON_DOTNET_NULLABLE@</Nullable>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <AllowUnsafeBlocks>@__AEON_DOTNET_ALLOW_UNSAFE_BLOCKS@</AllowUnsafeBlocks>
+    <EnableDefaultItems>false</EnableDefaultItems>
+    <BaseOutputPath>@__AEON_DOTNET_BASE_OUTPUT_PATH@</BaseOutputPath>
+    <BaseIntermediateOutputPath>@__AEON_DOTNET_BASE_INTERMEDIATE_OUTPUT_PATH@</BaseIntermediateOutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    @__AEON_DOTNET_SOURCES@
+  </ItemGroup>
+
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+
+</Project>
