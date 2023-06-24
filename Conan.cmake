@@ -4,7 +4,7 @@ function(__conan_install_internal conan_executable config)
     message(STATUS "Running conan install for ${config}...")
 
     execute_process(
-        COMMAND ${conan_executable} install . -if "${CMAKE_BINARY_DIR}" -s "build_type=${config}"
+        COMMAND ${conan_executable} install . -of "${CMAKE_BINARY_DIR}" -s "build_type=${config}"
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
         RESULT_VARIABLE CONAN_INSTALL_RESULT
     )
