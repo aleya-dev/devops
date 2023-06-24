@@ -1,12 +1,26 @@
 # Distributed under the BSD 2-Clause License - Copyright 2012-2022 Robin Degen
 
+include(Architecture)
+
 function(__conan_install_internal conan_executable config)
     message(STATUS "Running conan install for ${config}...")
 
+    if (AEON_ARCHITECTURE_32_BIT)
+        set(__CONAN_ARCH_NAME "x86")
+    else ()
+        set(__CONAN_ARCH_NAME "x86_64")
+    endif ()
+
     execute_process(
-        COMMAND ${conan_executable} install . -of "${CMAKE_BINARY_DIR}" -s "build_type=${config}"
+        COMMAND ${conan_executable} install .
+            -of "${CMAKE_BINARY_DIR}"
+            -s "build_type=${config}"
+            -s "arch=${__CONAN_ARCH_NAME}"
+            -s "compiler.cppstd=${CMAKE_CXX_STANDARD}"
+            -s "compiler.runtime_type=${config}"
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
         RESULT_VARIABLE CONAN_INSTALL_RESULT
+        COMMAND_ERROR_IS_FATAL ANY
     )
 
     if (NOT CONAN_INSTALL_RESULT EQUAL 0)
