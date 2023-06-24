@@ -1,4 +1,4 @@
-# Distributed under the BSD 2-Clause License - Copyright 2012-2022 Robin Degen
+# Distributed under the BSD 2-Clause License - Copyright 2012-2023 Robin Degen
 
 if (NOT TARGET benchmark::benchmark AND NOT TARGET CONAN_PKG::benchmark)
     message(FATAL_ERROR "Benchmark.cmake requires Google Benchmark (benchmark::benchmark or CONAN_PKG::benchmark target is missing)")
