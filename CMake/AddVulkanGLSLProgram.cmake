@@ -1,7 +1,7 @@
 # Distributed under the BSD 2-Clause License - Copyright 2012-2023 Robin Degen
 
-if (NOT VULKAN_FOUND OR NOT VULKAN_GLSLANG_VALIDATOR)
-    message(FATAL_ERROR "The Lunar-G vulkan SDK is required to compile Vulkan GLSL code.")
+if (NOT Vulkan_glslangValidator_FOUND)
+    message(FATAL_ERROR "A Vulkan SDK is required to compile Vulkan GLSL code. Call find_package(Vulkan) before including.")
 endif ()
 
 function(add_vulkan_glsl_program)
@@ -27,7 +27,7 @@ function(add_vulkan_glsl_program)
 
     add_custom_target(
         ${VULKAN_GLSL_PARSED_ARGS_TARGET} ALL
-        ${VULKAN_GLSLANG_VALIDATOR} "-V" ${FULL_PATH_SOURCES}
+        Vulkan::glslangValidator "-V" ${FULL_PATH_SOURCES}
         WORKING_DIRECTORY "${VULKAN_GLSL_PARSED_ARGS_DESTINATION}"
         COMMENT "Building Vulkan Shaders ${VULKAN_GLSL_PARSED_ARGS_TARGET}"
         SOURCES ${FULL_PATH_SOURCES}
