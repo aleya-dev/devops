@@ -1,0 +1,42 @@
+name: Build Conan Package (Linux)
+
+on:
+  workflow_dispatch:
+    inputs:
+      package_name:
+        description: 'Name of the package to build'
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/aleya-dev/devops:latest
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.github_token }}
+
+    steps:
+      - name: Conan detect
+        run: conan profile detect
+
+      - uses: actions/checkout@v3.5.3
+        with:
+          submodules: recursive
+
+      - name: Conan remote
+        run: conan config install ./Conan/remotes.json
+
+      - name: Conan login
+        env:
+          aleya_thirdparty_conan: ${{ secrets.ALEYA_THIRDPARTY_CONAN }}
+        run: conan remote login -p $aleya_thirdparty_conan aleya-thirdparty-conan admin
+
+      - name: Conan build gcc12_x86_64_debug
+        run: conan create ./Conan/thirdparty/${{ github.event.inputs.package_name }} -pr ./Conan/profiles/linux/gcc12_x86_64_debug
+
+      - name: Conan build gcc12_x86_64_release
+        run: conan create ./Conan/thirdparty/${{ github.event.inputs.package_name }} -pr ./Conan/profiles/linux/gcc12_x86_64_release
+
+      - name: Conan upload
+        run: conan upload ${{ github.event.inputs.package_name }} --remote aleya-thirdparty-conan

@@ -1,0 +1,14 @@
+{
+ "remotes": [
+  {
+   "name": "aleya-conan",
+   "url": "https://artifactory.aleya.dev/artifactory/api/conan/aleya-conan",
+   "verify_ssl": true
+  },
+  {
+   "name": "aleya-thirdparty-conan",
+   "url": "https://artifactory.aleya.dev/artifactory/api/conan/aleya-thirdparty-conan",
+   "verify_ssl": true
+  }
+ ]
+}
