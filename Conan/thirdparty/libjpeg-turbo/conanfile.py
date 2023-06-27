@@ -12,8 +12,8 @@ class LibJpegTurboConan(ConanFile):
     python_requires_extend = "aleya-conan-base.AleyaCmakeBase"
 
     name = "libjpeg-turbo"
-    git_repository = "git://cgit.aeons.dev/conan/mirrors/libjpeg-turbo.git"
-    git_branch = "main"
+    git_repository = "https://github.com/aleya-dev/mirror-package-libjpeg-turbo.git"
+    git_branch = "2.1.91"
 
     def on_generate(self, tc: CMakeToolchain):
         tc.variables["BUILD_SHARED_LIBS"] = False

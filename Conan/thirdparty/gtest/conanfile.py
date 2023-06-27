@@ -12,8 +12,8 @@ class GTestConan(ConanFile):
     python_requires_extend = "aleya-conan-base.AleyaCmakeBase"
 
     name = "gtest"
-    git_repository = "git://cgit.aeons.dev/conan/mirrors/googletest.git"
-    git_branch = "main"
+    git_repository = "https://github.com/aleya-dev/mirror-package-googletest.git"
+    git_branch = "1.13.0"
 
     def on_generate(self, tc: CMakeToolchain):
         tc.variables["BUILD_SHARED_LIBS"] = False

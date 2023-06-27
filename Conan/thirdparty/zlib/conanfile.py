@@ -12,8 +12,8 @@ class ZlibConan(ConanFile):
     python_requires_extend = "aleya-conan-base.AleyaCmakeBase"
 
     name = "zlib"
-    git_repository = "git://cgit.aeons.dev/conan/mirrors/zlib.git"
-    git_branch = "master"
+    git_repository = "https://github.com/aleya-dev/mirror-package-zlib.git"
+    git_branch = "1.2.13"
 
     def on_generate(self, tc: CMakeToolchain):
         tc.variables["BUILD_SHARED_LIBS"] = False

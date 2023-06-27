@@ -12,8 +12,8 @@ class GlfwConan(ConanFile):
     python_requires_extend = "aleya-conan-base.AleyaCmakeBase"
 
     name = "glfw"
-    git_repository = "git://cgit.aeons.dev/conan/mirrors/glfw.git"
-    git_branch = "master"
+    git_repository = "https://github.com/aleya-dev/mirror-package-glfw.git"
+    git_branch = "3.3.8"
 
     def on_generate(self, tc: CMakeToolchain):
         tc.variables["BUILD_SHARED_LIBS"] = False

@@ -11,8 +11,8 @@ class ZlibConan(ConanFile):
     python_requires_extend = "aleya-conan-base.AleyaConanBase"
 
     name = "asio"
-    git_repository = "git://cgit.aeons.dev/conan/mirrors/asio.git"
-    git_branch = "master"
+    git_repository = "https://github.com/aleya-dev/mirror-package-asio.git"
+    git_branch = "1.28.0"
 
     no_copy_source = True
 

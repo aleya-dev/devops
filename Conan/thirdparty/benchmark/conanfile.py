@@ -12,8 +12,8 @@ class BenchmarkConan(ConanFile):
     python_requires_extend = "aleya-conan-base.AleyaCmakeBase"
 
     name = "benchmark"
-    git_repository = "git://cgit.aeons.dev/conan/mirrors/benchmark.git"
-    git_branch = "main"
+    git_repository = "https://github.com/aleya-dev/mirror-package-benchmark.git"
+    git_branch = "1.8.0"
 
     def on_generate(self, tc: CMakeToolchain):
         tc.variables["BUILD_SHARED_LIBS"] = False

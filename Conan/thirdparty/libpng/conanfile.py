@@ -12,11 +12,11 @@ class LibPngConan(ConanFile):
     python_requires_extend = "aleya-conan-base.AleyaCmakeBase"
 
     name = "libpng"
-    git_repository = "git://cgit.aeons.dev/conan/mirrors/libpng.git"
+    git_repository = "https://github.com/aleya-dev/mirror-package-libpng.git"
     git_branch = "master"
 
     def requirements(self):
-        self.requires("zlib/v1.2.13")
+        self.requires("zlib/1.2.13")
 
     def on_generate(self, tc: CMakeToolchain):
         tc.variables["PNG_TESTS"] = False

@@ -12,8 +12,8 @@ class SDL2Conan(ConanFile):
     python_requires_extend = "aleya-conan-base.AleyaCmakeBase"
 
     name = "sdl"
-    git_repository = "git://cgit.aeons.dev/conan/mirrors/sdl2.git"
-    git_branch = "SDL2"
+    git_repository = "https://github.com/aleya-dev/mirror-package-sdl.git"
+    git_branch = "2.28.0"
 
     def on_generate(self, tc: CMakeToolchain):
         tc.variables["SDL_SHARED"] = False

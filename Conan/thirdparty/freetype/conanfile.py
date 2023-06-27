@@ -12,12 +12,12 @@ class FreeTypeConan(ConanFile):
     python_requires_extend = "aleya-conan-base.AleyaCmakeBase"
 
     name = "freetype"
-    git_repository = "git://cgit.aeons.dev/conan/mirrors/freetype.git"
-    git_branch = "master"
+    git_repository = "https://github.com/aleya-dev/mirror-package-freetype.git"
+    git_branch = "2.13.0"
 
     def requirements(self):
-        self.requires("zlib/v1.2.13")
-        self.requires("libpng/v1.6.40")
+        self.requires("zlib/1.2.13")
+        self.requires("libpng/1.6.40")
 
     def on_generate(self, tc: CMakeToolchain):
         tc.variables["BUILD_SHARED_LIBS"] = False
