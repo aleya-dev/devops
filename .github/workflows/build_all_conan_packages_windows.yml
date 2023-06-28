@@ -1,0 +1,30 @@
+name: Build All Conan Packages (Windows)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Conan install
+        run: python -m pip install conan
+
+      - name: Conan detect
+        run: conan profile detect
+
+      - uses: actions/checkout@v3.5.3
+        with:
+          submodules: recursive
+
+      - name: Conan remote
+        run: conan config install ./Conan/remotes.json
+
+      - name: Conan login
+        env:
+          aleya_thirdparty_conan: ${{ secrets.ALEYA_THIRDPARTY_CONAN }}
+        run: conan remote login -p $Env:aleya_thirdparty_conan aleya-thirdparty-conan admin
+
+      - name: Conan build and deploy
+        run: python ./Conan/build_all.py
