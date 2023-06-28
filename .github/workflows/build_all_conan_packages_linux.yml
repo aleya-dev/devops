@@ -1,0 +1,32 @@
+name: Build All Conan Packages (Linux)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/aleya-dev/devops_docker_ubuntu_gcc:master
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.github_token }}
+
+    steps:
+      - name: Conan detect
+        run: conan profile detect
+
+      - uses: actions/checkout@v3.5.3
+        with:
+          submodules: recursive
+
+      - name: Conan remote
+        run: conan config install ./Conan/remotes.json
+
+      - name: Conan login
+        env:
+          aleya_thirdparty_conan: ${{ secrets.ALEYA_THIRDPARTY_CONAN }}
+        run: conan remote login -p $aleya_thirdparty_conan aleya-thirdparty-conan admin
+
+      - name: Conan build and deploy
+        run: python ./Conan/build_all.py

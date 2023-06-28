@@ -96,7 +96,7 @@ def build_conan_infra():
     os.system(f"conan export {conan_base_path}")
 
 
-def build_all_thirdparty():
+def build_all_thirdparty() -> list[str]:
     packages = get_packages()
     sorted_packages = topological_sort(packages)
 
@@ -117,10 +117,24 @@ def build_all_thirdparty():
         for profile in profiles:
             build_conan_package(package_path, profile)
 
+    return packages
+
+
+def upload_packages(packages: list[str]):
+    for package in packages:
+        command = f"conan upload {package} -c --remote aleya-thirdparty-conan"
+        return_code = subprocess.call(command, shell=True)
+
+        if return_code != 0:
+            print(f"An error occurred while executing the command: {command}")
+            print(f"Return code: {return_code}")
+            exit(return_code)
+
 
 def main():
     build_conan_infra()
-    build_all_thirdparty()
+    packages = build_all_thirdparty()
+    upload_packages(packages)
 
 
 if __name__ == '__main__':
