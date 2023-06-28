@@ -87,8 +87,6 @@ def build_conan_package(package_path: str, profile_path: str):
         print(f"An error occurred while executing the command: {command}")
         print(f"Return code: {return_code}")
         exit(return_code)
-    else:
-        print("Command executed successfully.")
 
 
 def build_conan_infra():
