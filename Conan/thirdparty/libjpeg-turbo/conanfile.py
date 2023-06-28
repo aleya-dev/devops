@@ -1,6 +1,6 @@
 from conan import ConanFile
 from conan.tools.cmake import CMake, CMakeToolchain
-from conan.tools.files import rmdir
+from conan.tools.files import rmdir, collect_libs
 import os
 
 
@@ -31,7 +31,5 @@ class LibJpegTurboConan(ConanFile):
         self.cpp_info.set_property("cmake_module_file_name", "JPEG")
         self.cpp_info.set_property("cmake_file_name", "libjpeg-turbo")
 
-        postfix = "-static" if self.settings.os == "Windows" and not self._is_mingw else ""
-
-        self.cpp_info.components["turbojpeg"].libs = ["turbojpeg" + postfix]
+        self.cpp_info.components["turbojpeg"].libs = collect_libs(self)
         self.cpp_info.components["turbojpeg"].set_property("cmake_target_name", "libjpeg-turbo::turbojpeg-static")
