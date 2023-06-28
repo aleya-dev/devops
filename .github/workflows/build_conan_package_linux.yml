@@ -11,7 +11,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/aleya-dev/devops:latest
+      image: ghcr.io/aleya-dev/devops_docker_ubuntu_gcc:master
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.github_token }}
