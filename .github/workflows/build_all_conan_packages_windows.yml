@@ -17,7 +17,8 @@ jobs:
       - name: Install Vulkan SDK
         run: |
           Invoke-WebRequest -Uri https://sdk.lunarg.com/sdk/download/1.3.250.0/windows/VulkanSDK-1.3.250.0-Installer.exe -OutFile vulkansdk.exe
-          & .\vulkansdk.exe --root $Env:GITHUB_WORKSPACE\Vulkan-1.2.182.1 --accept-licenses --default-answer --confirm-command install
+          & .\vulkansdk.exe --root $Env:GITHUB_WORKSPACE\VulkanSdk --accept-licenses --default-answer --confirm-command install
+          [Environment]::SetEnvironmentVariable('VULKAN_SDK',$Env:GITHUB_WORKSPACE+"\VulkanSdk")
 
       - uses: actions/checkout@v3.5.3
         with:
