@@ -8,6 +8,11 @@ jobs:
     runs-on: windows-latest
 
     steps:
+      - name: Version info
+        run: |
+            cmake --version
+            python --version
+
       - name: Conan install
         run: python -m pip install conan
 
