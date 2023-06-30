@@ -8,19 +8,27 @@ required_conan_version = ">=2.0"
 
 
 class FreeTypeConan(ConanFile):
-    python_requires = "aleya-conan-base/1.0"
+    python_requires = "aleya-conan-base/1.0.1"
     python_requires_extend = "aleya-conan-base.AleyaCmakeBase"
 
     name = "freetype"
     git_repository = "https://github.com/aleya-dev/mirror-package-freetype.git"
     git_branch = "2.13.0"
+    ignore_cpp_standard = True
+
+    def configure(self):
+        super().configure()
+
+        self.options["zlib"].shared = self.options.shared
+        self.options["libpng"].shared = self.options.shared
 
     def requirements(self):
         self.requires("zlib/1.2.13")
         self.requires("libpng/1.6.40")
 
-    def on_generate(self, tc: CMakeToolchain):
-        tc.variables["BUILD_SHARED_LIBS"] = False
+    def generate(self):
+        tc = CMakeToolchain(self)
+        tc.variables["BUILD_SHARED_LIBS"] = self.options.shared
         tc.variables["FT_REQUIRE_ZLIB"] = True
         tc.variables["FT_REQUIRE_PNG"] = True
         tc.variables["FT_DISABLE_HARFBUZZ"] = True
@@ -28,11 +36,14 @@ class FreeTypeConan(ConanFile):
         tc.variables["FT_DISABLE_BROTLI"] = True
         tc.generate()
         tc = CMakeDeps(self)
+        tc.generate()
 
     def on_package(self, cmake: CMake):
-        rmdir(self, os.path.join(self.package_folder, "bin"))
         rmdir(self, os.path.join(self.package_folder, "lib", "pkgconfig"))
         rmdir(self, os.path.join(self.package_folder, "lib", "cmake"))
+
+        if not self.options.shared:
+            rmdir(self, os.path.join(self.package_folder, "bin"))
 
     def package_info(self):
         self.cpp_info.set_property("cmake_find_mode", "both")
