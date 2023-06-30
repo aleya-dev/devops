@@ -8,15 +8,16 @@ required_conan_version = ">=2.0"
 
 
 class VulkanMemoryAllocatorConan(ConanFile):
-    python_requires = "aleya-conan-base/1.0"
+    python_requires = "aleya-conan-base/1.0.1"
     python_requires_extend = "aleya-conan-base.AleyaCmakeBase"
 
     name = "vulkan-memory-allocator"
     git_repository = "https://github.com/aleya-dev/mirror-package-vulkan-memory-allocator.git"
     git_branch = "3.0.1"
 
-    def on_generate(self, tc: CMakeToolchain):
-        tc.variables["BUILD_SHARED_LIBS"] = False
+    def generate(self):
+        tc = CMakeToolchain(self)
+        tc.variables["BUILD_SHARED_LIBS"] = self.options.shared
         tc.variables["BUILD_DOCUMENTATION"] = False
         tc.variables["VMA_BUILD_SAMPLE"] = False
         tc.variables["VMA_BUILD_SAMPLE_SHADERS"] = False
@@ -26,6 +27,7 @@ class VulkanMemoryAllocatorConan(ConanFile):
         tc.variables["VMA_DEBUG_INITIALIZE_ALLOCATIONS"] = False
         tc.variables["VMA_DYNAMIC_VULKAN_FUNCTIONS"] = False
         tc.variables["VMA_STATIC_VULKAN_FUNCTIONS"] = True
+        tc.generate()
 
     def on_package(self, cmake: CMake):
         rmdir(self, os.path.join(self.package_folder, "lib", "cmake"))
