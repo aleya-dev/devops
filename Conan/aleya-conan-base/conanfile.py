@@ -89,12 +89,6 @@ class AleyaConanBase:
 
 
 class AleyaCmakeBase(AleyaConanBase):
-    def generate(self):
-        tc = CMakeToolchain(self)
-        tc.variables["CMAKE_DEBUG_POSTFIX"] = ''
-        self.on_generate(tc)
-        tc.generate()
-
     def build(self):
         cmake = CMake(self)
         cmake.configure()
