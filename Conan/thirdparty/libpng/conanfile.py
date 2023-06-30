@@ -8,26 +8,36 @@ required_conan_version = ">=2.0"
 
 
 class LibPngConan(ConanFile):
-    python_requires = "aleya-conan-base/1.0"
+    python_requires = "aleya-conan-base/1.0.1"
     python_requires_extend = "aleya-conan-base.AleyaCmakeBase"
 
     name = "libpng"
     git_repository = "https://github.com/aleya-dev/mirror-package-libpng.git"
     git_branch = "master"
+    ignore_cpp_standard = True
+
+    def configure(self):
+        super(LibPngConan, self).configure()
+
+        self.options["zlib"].shared = self.options.shared
 
     def requirements(self):
         self.requires("zlib/1.2.13")
 
     def on_generate(self, tc: CMakeToolchain):
         tc.variables["PNG_TESTS"] = False
-        tc.variables["PNG_SHARED"] = False
-        tc.variables["PNG_STATIC"] = True
+        tc.variables["PNG_EXECUTABLES"] = False
+        tc.variables["PNG_SHARED"] = self.options.shared
+        tc.variables["PNG_STATIC"] = not self.options.shared
         tc.generate()
         tc = CMakeDeps(self)
 
     def on_package(self, cmake: CMake):
-        rmdir(self, os.path.join(self.package_folder, "bin"))
         rmdir(self, os.path.join(self.package_folder, "share"))
+
+        if not self.options.shared:
+            rmdir(self, os.path.join(self.package_folder, "bin"))
+
         rm(self, "*.cmake", os.path.join(self.package_folder, "lib"), recursive=True)
 
     def package_info(self):
