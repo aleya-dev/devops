@@ -8,15 +8,16 @@ required_conan_version = ">=2.0"
 
 
 class GlfwConan(ConanFile):
-    python_requires = "aleya-conan-base/1.0"
+    python_requires = "aleya-conan-base/1.0.1"
     python_requires_extend = "aleya-conan-base.AleyaCmakeBase"
 
     name = "glfw"
     git_repository = "https://github.com/aleya-dev/mirror-package-glfw.git"
     git_branch = "3.3.8"
 
-    def on_generate(self, tc: CMakeToolchain):
-        tc.variables["BUILD_SHARED_LIBS"] = False
+    def generate(self):
+        tc = CMakeToolchain(self)
+        tc.variables["BUILD_SHARED_LIBS"] = self.options.shared
         tc.variables["GLFW_BUILD_DOCS"] = False
         tc.variables["GLFW_BUILD_EXAMPLES"] = False
         tc.variables["GLFW_BUILD_TESTS"] = False
@@ -24,6 +25,8 @@ class GlfwConan(ConanFile):
 
         if self.settings.os == "Windows":
             tc.variables["USE_MSVC_RUNTIME_LIBRARY_DLL"] = True
+
+        tc.generate()
 
     def on_package(self, cmake: CMake):
         rmdir(self, os.path.join(self.package_folder, "lib", "cmake"))
