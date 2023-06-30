@@ -13,7 +13,7 @@ class LibPngConan(ConanFile):
 
     name = "libpng"
     git_repository = "https://github.com/aleya-dev/mirror-package-libpng.git"
-    git_branch = "master"
+    git_branch = "1.6.40"
     ignore_cpp_standard = True
 
     def configure(self):
