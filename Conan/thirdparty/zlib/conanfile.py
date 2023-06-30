@@ -16,14 +16,16 @@ class ZlibConan(ConanFile):
     git_branch = "1.2.13"
     ignore_cpp_standard = True
 
-    def on_generate(self, tc: CMakeToolchain):
+    def generate(self):
+        tc = CMakeToolchain(self)
+        tc.variables["CMAKE_DEBUG_POSTFIX"] = ''
         tc.variables["BUILD_SHARED_LIBS"] = self.options.shared
         tc.variables["INSTALL_LIB_DIR"] = "lib"
         tc.variables["INSTALL_INC_DIR"] = "include"
+        tc.generate()
 
     def on_package(self, cmake: CMake):
         rmdir(self, os.path.join(self.package_folder, "share"))
-        rm(self, "*.so.*", os.path.join(self.package_folder, "lib"), recursive=True)
 
         if self.options.shared:
             rm(self, "*.a", os.path.join(self.package_folder, "lib"), recursive=True)

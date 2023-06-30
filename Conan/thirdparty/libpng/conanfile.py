@@ -24,18 +24,25 @@ class LibPngConan(ConanFile):
     def requirements(self):
         self.requires("zlib/1.2.13")
 
-    def on_generate(self, tc: CMakeToolchain):
+    def generate(self):
+        tc = CMakeToolchain(self)
+        tc.variables["CMAKE_DEBUG_POSTFIX"] = ''
         tc.variables["PNG_TESTS"] = False
         tc.variables["PNG_EXECUTABLES"] = False
         tc.variables["PNG_SHARED"] = self.options.shared
         tc.variables["PNG_STATIC"] = not self.options.shared
         tc.generate()
         tc = CMakeDeps(self)
+        tc.generate()
 
     def on_package(self, cmake: CMake):
         rmdir(self, os.path.join(self.package_folder, "share"))
+        rmdir(self, os.path.join(self.package_folder, "lib", "pkgconfig"))
 
-        if not self.options.shared:
+        if self.options.shared:
+            rm(self, "*.a", os.path.join(self.package_folder, "lib"), recursive=True)
+        else:
+            rm(self, "*.so", os.path.join(self.package_folder, "lib"), recursive=True)
             rmdir(self, os.path.join(self.package_folder, "bin"))
 
         rm(self, "*.cmake", os.path.join(self.package_folder, "lib"), recursive=True)
