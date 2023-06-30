@@ -17,7 +17,7 @@ class LibPngConan(ConanFile):
     ignore_cpp_standard = True
 
     def configure(self):
-        super(LibPngConan, self).configure()
+        super().configure()
 
         self.options["zlib"].shared = self.options.shared
 
