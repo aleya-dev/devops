@@ -23,12 +23,15 @@ class ZlibConan(ConanFile):
 
     def on_package(self, cmake: CMake):
         rmdir(self, os.path.join(self.package_folder, "share"))
+        rm(self, "*.so.*", os.path.join(self.package_folder, "lib"), recursive=True)
 
         if self.options.shared:
+            rm(self, "*.a", os.path.join(self.package_folder, "lib"), recursive=True)
             rm(self, "zlibstatic.lib", os.path.join(self.package_folder, "lib"), recursive=True)
             rm(self, "zlibstaticd.lib", os.path.join(self.package_folder, "lib"), recursive=True)
         else:
             rmdir(self, os.path.join(self.package_folder, "bin"))
+            rm(self, "*.so", os.path.join(self.package_folder, "lib"), recursive=True)
             rm(self, "zlib.lib", os.path.join(self.package_folder, "lib"), recursive=True)
             rm(self, "zlibd.lib", os.path.join(self.package_folder, "lib"), recursive=True)
 
