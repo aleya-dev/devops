@@ -26,15 +26,13 @@ class FreeTypeConan(ConanFile):
         "fPIC": True
     }
 
+    requires = "zlib/1.2.13", "libpng/1.6.40"
+
     def configure(self):
         super().configure()
 
         self.options["zlib"].shared = self.options.shared
         self.options["libpng"].shared = self.options.shared
-
-    def requirements(self):
-        self.requires("zlib/1.2.13")
-        self.requires("libpng/1.6.40")
 
     def generate(self):
         tc = CMakeToolchain(self)

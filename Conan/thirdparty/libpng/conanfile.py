@@ -26,13 +26,12 @@ class LibPngConan(ConanFile):
         "fPIC": True
     }
 
+    requires = "zlib/1.2.13"
+
     def configure(self):
         super().configure()
 
         self.options["zlib"].shared = self.options.shared
-
-    def requirements(self):
-        self.requires("zlib/1.2.13")
 
     def generate(self):
         tc = CMakeToolchain(self)
