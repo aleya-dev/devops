@@ -1,22 +1,13 @@
+from tempfile import TemporaryDirectory
+
 from conan import ConanFile
 from conan.tools.scm import Git
-from conan.tools.cmake import CMake, CMakeToolchain
-from conan.tools.files import rmdir
+from conan.tools.cmake import CMake
 
 
 class AleyaConanBase:
     package_type = "library"
     settings = "os", "arch", "compiler", "build_type"
-
-    options = {
-        "shared": [False, True],
-        "fPIC": [False]
-    }
-
-    default_options = {
-        "shared": False,
-        "fPIC": False
-    }
 
     """
     The git repository to use as source. If you do wish to use a different source, you must implement the
@@ -41,11 +32,12 @@ class AleyaConanBase:
         self.output.info("Repository: {}".format(self.git_repository))
         self.output.info("Branch: {}".format(self.git_branch))
 
-        if self.settings.os == "Windows":
-            del self.options.fPIC
+        if hasattr(self.options, "fPIC"):
+            if self.settings.os == "Windows":
+                del self.options.fPIC
 
     def configure(self):
-        if self.options.shared:
+        if hasattr(self.options, "shared") and self.options.shared:
             self.options.rm_safe("fPIC")
 
         if self.ignore_cpp_standard:
@@ -75,13 +67,12 @@ class AleyaConanBase:
         self.version = self.version or self.__generate_version()
 
     def __generate_version(self):
-        rmdir(self, "temp-git-dir")
-        git = Git(self, "temp-git-dir")
-        git.clone(url=self.git_repository, target='.')
-        git.checkout(commit=self.git_branch)
-        result = self.__get_git_describe(git)
-        rmdir(self, "temp-git-dir")
-        return result
+        with TemporaryDirectory() as tmp_dir_name:
+            git = Git(self, tmp_dir_name)
+            git.clone(url=self.git_repository, target='.')
+            git.checkout(commit=self.git_branch)
+            result = self.__get_git_describe(git)
+            return result
 
     @staticmethod
     def __get_git_describe(git: Git):
@@ -98,10 +89,8 @@ class AleyaCmakeBase(AleyaConanBase):
         cmake = CMake(self)
         cmake.install()
 
-        self.on_package(cmake)
-
 
 class AleyaConanBaseConanFile(ConanFile):
     name = "aleya-conan-base"
-    version = "1.0.1"
+    version = "1.1.0"
     package_type = "python-require"
