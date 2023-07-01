@@ -1,5 +1,5 @@
 from conan import ConanFile
-from conan.tools.cmake import CMake, CMakeToolchain
+from conan.tools.cmake import CMakeToolchain
 from conan.tools.files import rmdir
 import os
 
@@ -8,14 +8,25 @@ required_conan_version = ">=2.0"
 
 
 class BenchmarkConan(ConanFile):
-    python_requires = "aleya-conan-base/1.0"
+    python_requires = "aleya-conan-base/[>=1.1.0 <1.2.0]"
     python_requires_extend = "aleya-conan-base.AleyaCmakeBase"
 
     name = "benchmark"
     git_repository = "https://github.com/aleya-dev/mirror-package-benchmark.git"
     git_branch = "1.8.0"
 
-    def on_generate(self, tc: CMakeToolchain):
+    options = {
+        "shared": [False],
+        "fPIC": [False, True]
+    }
+
+    default_options = {
+        "shared": False,
+        "fPIC": True
+    }
+
+    def generate(self):
+        tc = CMakeToolchain(self)
         tc.variables["BUILD_SHARED_LIBS"] = False
         tc.variables["BENCHMARK_ENABLE_ASSEMBLY_TESTS"] = False
         tc.variables["BENCHMARK_DOWNLOAD_DEPENDENCIES"] = False
@@ -25,8 +36,11 @@ class BenchmarkConan(ConanFile):
         tc.variables["BENCHMARK_ENABLE_TESTING"] = False
         tc.variables["BENCHMARK_ENABLE_INSTALL"] = True
         tc.variables["BENCHMARK_INSTALL_DOCS"] = False
+        tc.generate()
 
-    def on_package(self, cmake: CMake):
+    def package(self):
+        super().package()
+
         rmdir(self, os.path.join(self.package_folder, "bin"))
         rmdir(self, os.path.join(self.package_folder, "lib", "cmake"))
         rmdir(self, os.path.join(self.package_folder, "lib", "pkgconfig"))

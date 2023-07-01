@@ -7,7 +7,7 @@ required_conan_version = ">=2.0"
 
 
 class ZlibConan(ConanFile):
-    python_requires = "aleya-conan-base/1.0.1"
+    python_requires = "aleya-conan-base/[>=1.1.0 <1.2.0]"
     python_requires_extend = "aleya-conan-base.AleyaConanBase"
 
     name = "asio"
@@ -15,6 +15,9 @@ class ZlibConan(ConanFile):
     git_branch = "1.28.0"
 
     no_copy_source = True
+
+    options = {}
+    default_options = {}
 
     def package_id(self):
         self.info.clear()

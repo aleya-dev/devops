@@ -1,5 +1,5 @@
 from conan import ConanFile
-from conan.tools.cmake import CMake, CMakeToolchain, CMakeDeps
+from conan.tools.cmake import CMakeToolchain, CMakeDeps
 from conan.tools.files import rmdir, rm, collect_libs
 import os
 
@@ -8,13 +8,23 @@ required_conan_version = ">=2.0"
 
 
 class LibPngConan(ConanFile):
-    python_requires = "aleya-conan-base/1.0.1"
+    python_requires = "aleya-conan-base/[>=1.1.0 <1.2.0]"
     python_requires_extend = "aleya-conan-base.AleyaCmakeBase"
 
     name = "libpng"
     git_repository = "https://github.com/aleya-dev/mirror-package-libpng.git"
     git_branch = "1.6.40"
     ignore_cpp_standard = True
+
+    options = {
+        "shared": [False, True],
+        "fPIC": [False, True]
+    }
+
+    default_options = {
+        "shared": False,
+        "fPIC": True
+    }
 
     def configure(self):
         super().configure()
@@ -35,7 +45,9 @@ class LibPngConan(ConanFile):
         tc = CMakeDeps(self)
         tc.generate()
 
-    def on_package(self, cmake: CMake):
+    def package(self):
+        super().package()
+
         rmdir(self, os.path.join(self.package_folder, "share"))
         rmdir(self, os.path.join(self.package_folder, "lib", "pkgconfig"))
 

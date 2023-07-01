@@ -8,22 +8,36 @@ required_conan_version = ">=2.0"
 
 
 class GTestConan(ConanFile):
-    python_requires = "aleya-conan-base/1.0"
+    python_requires = "aleya-conan-base/[>=1.1.0 <1.2.0]"
     python_requires_extend = "aleya-conan-base.AleyaCmakeBase"
 
     name = "gtest"
     git_repository = "https://github.com/aleya-dev/mirror-package-googletest.git"
     git_branch = "1.13.0"
 
-    def on_generate(self, tc: CMakeToolchain):
+    options = {
+        "shared": [False],
+        "fPIC": [False, True]
+    }
+
+    default_options = {
+        "shared": False,
+        "fPIC": True
+    }
+
+    def generate(self):
+        tc = CMakeToolchain(self)
         tc.variables["BUILD_SHARED_LIBS"] = False
         tc.variables["GTEST_HAS_ABSL"] = False
         tc.variables["gmock_build_tests"] = False
         tc.variables["gtest_build_samples"] = False
         tc.variables["gtest_build_tests"] = False
         tc.variables["gtest_force_shared_crt"] = self.settings.os == "Windows"
+        tc.generate()
 
-    def on_package(self, cmake: CMake):
+    def package(self):
+        super().package()
+
         rmdir(self, os.path.join(self.package_folder, "bin"))
         rmdir(self, os.path.join(self.package_folder, "lib", "cmake"))
         rmdir(self, os.path.join(self.package_folder, "lib", "pkgconfig"))

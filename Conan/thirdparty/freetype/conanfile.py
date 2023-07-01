@@ -1,5 +1,5 @@
 from conan import ConanFile
-from conan.tools.cmake import CMake, CMakeToolchain, CMakeDeps
+from conan.tools.cmake import CMakeToolchain, CMakeDeps
 from conan.tools.files import rmdir, collect_libs
 import os
 
@@ -8,13 +8,23 @@ required_conan_version = ">=2.0"
 
 
 class FreeTypeConan(ConanFile):
-    python_requires = "aleya-conan-base/1.0.1"
+    python_requires = "aleya-conan-base/[>=1.1.0 <1.2.0]"
     python_requires_extend = "aleya-conan-base.AleyaCmakeBase"
 
     name = "freetype"
     git_repository = "https://github.com/aleya-dev/mirror-package-freetype.git"
     git_branch = "2.13.0"
     ignore_cpp_standard = True
+
+    options = {
+        "shared": [False, True],
+        "fPIC": [False, True]
+    }
+
+    default_options = {
+        "shared": False,
+        "fPIC": True
+    }
 
     def configure(self):
         super().configure()
@@ -38,7 +48,9 @@ class FreeTypeConan(ConanFile):
         tc = CMakeDeps(self)
         tc.generate()
 
-    def on_package(self, cmake: CMake):
+    def package(self):
+        super().package()
+
         rmdir(self, os.path.join(self.package_folder, "lib", "pkgconfig"))
         rmdir(self, os.path.join(self.package_folder, "lib", "cmake"))
 

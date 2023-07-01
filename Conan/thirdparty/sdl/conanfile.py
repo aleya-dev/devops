@@ -1,5 +1,5 @@
 from conan import ConanFile
-from conan.tools.cmake import CMake, CMakeToolchain
+from conan.tools.cmake import CMakeToolchain
 from conan.tools.files import rmdir, rm
 import os
 
@@ -8,13 +8,23 @@ required_conan_version = ">=2.0"
 
 
 class SDL2Conan(ConanFile):
-    python_requires = "aleya-conan-base/1.0.1"
+    python_requires = "aleya-conan-base/[>=1.1.0 <1.2.0]"
     python_requires_extend = "aleya-conan-base.AleyaCmakeBase"
 
     name = "sdl"
     git_repository = "https://github.com/aleya-dev/mirror-package-sdl.git"
     git_branch = "2.28.0"
     ignore_cpp_standard = True
+
+    options = {
+        "shared": [False, True],
+        "fPIC": [False, True]
+    }
+
+    default_options = {
+        "shared": False,
+        "fPIC": True
+    }
 
     def generate(self):
         tc = CMakeToolchain(self)
@@ -24,7 +34,9 @@ class SDL2Conan(ConanFile):
         tc.variables["SDL_TESTS"] = False
         tc.generate()
 
-    def on_package(self, cmake: CMake):
+    def package(self):
+        super().package()
+
         rmdir(self, os.path.join(self.package_folder, "share"))
         rmdir(self, os.path.join(self.package_folder, "cmake"))
         rmdir(self, os.path.join(self.package_folder, "lib", "cmake"))
