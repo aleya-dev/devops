@@ -32,12 +32,11 @@ class AleyaConanBase:
         self.output.info("Repository: {}".format(self.git_repository))
         self.output.info("Branch: {}".format(self.git_branch))
 
-        if hasattr(self.options, "fPIC"):
-            if self.settings.os == "Windows":
-                del self.options.fPIC
+        if self.settings.os == "Windows":
+            self.options.rm_safe("fPIC")
 
     def configure(self):
-        if hasattr(self.options, "shared") and self.options.shared:
+        if self.options.get_safe("shared", False):
             self.options.rm_safe("fPIC")
 
         if self.ignore_cpp_standard:
