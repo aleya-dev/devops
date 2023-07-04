@@ -13,11 +13,16 @@ class ZlibConan(ConanFile):
     name = "asio"
     git_repository = "https://github.com/aleya-dev/mirror-package-asio.git"
     git_branch = "1.28.0"
+    package_type = "header-library"
 
     no_copy_source = True
 
-    options = {}
-    default_options = {}
+    options = {
+        'header_only': [True]
+    }
+    default_options = {
+        'header_only': True
+    }
 
     def package_id(self):
         self.info.clear()
