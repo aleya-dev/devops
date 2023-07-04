@@ -4,8 +4,7 @@
 import sys
 import logging
 
-from aleya.conan import get_profiles_for_current_os
-from aleya.conan import ConanFileInfo
+from aleya.conan import get_profiles_for_current_os, ConanFileInfo
 
 
 def main(args: list[str]):

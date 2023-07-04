@@ -1,75 +1,83 @@
-import platform
+import json
 import subprocess
-import os
 import logging
+import os
+from .LowLevel import build_package, upload_package
 
 
-def __get_script_path() -> str:
-    """Returns the path of the directory where this script is located"""
-    return os.path.dirname(os.path.realpath(__file__))
+class ConanDependency:
+    name: str = ""
+    version: str = ""
+
+    def __init__(self, version_string: str):
+        name_version_part = version_string.split("@")[0]
+        name_version = name_version_part.split("/")
+        self.name = name_version[0]
+        self.version = name_version[1]
 
 
-def get_profile_root_path() -> str:
-    """Returns the path of the Conan profiles directory"""
-    return os.path.join(__get_script_path(), "..", "..", "..", "Conan", "profiles")
+class ConanFileInfo:
+    name: str = ""
+    version: str = ""
+    conan_file_base_path: str = ""
+    options: dict[dict[str]] = {}
+    requires: list[ConanDependency] = []
 
+    def __init__(self, conan_file_base_path: str):
+        self.conan_file_base_path = conan_file_base_path
+        self.__parse_inspect_info()
 
-def get_profile_path(os_name: str) -> str:
-    """Returns the path of the Conan profiles directory for a given operating system"""
-    return os.path.join(get_profile_root_path(), os_name)
+    def __parse_inspect_info(self):
+        inspect_info = subprocess.run(
+            ["conan", "inspect", self.conan_file_base_path, "-f", "json", "-vnotice"], capture_output=True)
+        inspect_info.check_returncode()
 
+        inspect_json = json.loads(inspect_info.stdout)
 
-def get_profiles(os_name: str) -> list[str]:
-    """Returns a list of all profiles in the profiles directory for a given operating system"""
-    path = get_profile_path(os_name)
-    return [os.path.join(path, o) for o in os.listdir(path) if os.path.isfile(os.path.join(path, o))]
+        self.name = inspect_json["name"]
+        self.version = inspect_json["version"]
+        self.options = inspect_json["options_definitions"]
 
+        for require in inspect_json["requires"]:
+            self.requires.append(ConanDependency(require["ref"]))
 
-def get_profiles_for_current_os() -> list[str]:
-    """Returns a list of all profiles in the profiles directory for the current operating system"""
-    if platform.system() == "Windows":
-        return get_profiles("windows")
-    elif platform.system() == "Linux":
-        return get_profiles("linux")
-    elif platform.system() == "Darwin":
-        return get_profiles("macos")
-    else:
-        print(f"Unsupported platform: {platform.system()}")
-        exit(1)
+    @staticmethod
+    def enumerate(base_path: str):
+        """
+        Enumerate all conan packages in the given base path, and return a list of ConanFileInfo objects containing
+        information about each package.
+        """
+        packages: list[ConanFileInfo] = []
 
+        dirs = os.listdir(base_path)
 
-def build_package(package_path: str, profile_path: str, options: dict[str, str] = None):
-    """Build a conan package with the given arguments"""
-    logging.info(f"Building package: {package_path}")
-    logging.info(f"Using profile: {profile_path}")
-    logging.info(f"Using options: {options}")
+        logging.info('Enumerating Conan packages in: {}'.format(base_path))
+        logging.info('Found {} potential packages...'.format(len(dirs)))
 
-    command = f"conan create {package_path} -pr {profile_path}"
+        for package in dirs:
+            logging.info('Processing Conan package: {}'.format(package))
 
-    if options is not None:
-        for key, value in options.items():
-            command += f" -o {key}={value}"
+            package_path = os.path.join(base_path, package)
 
-    logging.info(f"Executing command: {command}")
+            if os.path.isdir(package_path):
+                conan_file_path = os.path.join(package_path, "conanfile.py")
 
-    return_code = subprocess.call(command, shell=True)
+                if os.path.isfile(conan_file_path):
+                    packages.append(ConanFileInfo(conan_file_path))
 
-    if return_code != 0:
-        print(f"An error occurred while executing the command: {command}")
-        print(f"Return code: {return_code}")
-        exit(return_code)
+        logging.info('Found {} Conan packages'.format(len(packages)))
 
+        return packages
 
-def upload_package(package_name: str, remote: str):
-    """Upload a conan package to the given remote"""
-    logging.info(f"Uploading package: {package_name}")
+    def build(self, profile_path: str, shared: bool|None, additional_options: dict[str, str] = None):
+        """Build this conan package"""
+        options = {'shared': shared} if shared else {}
 
-    command = f"conan upload {package_name} -c --remote {remote}"
+        if additional_options is not None:
+            options.update(additional_options)
 
-    logging.info(f"Executing command: {command}")
-    return_code = subprocess.call(command, shell=True)
+        build_package(self.conan_file_base_path, profile_path, options)
 
-    if return_code != 0:
-        print(f"An error occurred while executing the command: {command}")
-        print(f"Return code: {return_code}")
-        exit(return_code)
+    def upload(self, remote: str):
+        """Upload all profile and options variations of this conan package available locally to the given remote"""
+        upload_package(f"{self.name}/{self.version}", remote)
