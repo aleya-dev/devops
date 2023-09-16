@@ -28,7 +28,7 @@ class ZlibConan(ConanFile):
         self.info.clear()
 
     def package(self):
-        include_dir = os.path.join(self.source_folder, "asio", "include")
+        include_dir = os.path.join(self.source_folder, "include")
         copy(self, "*.hpp", src=include_dir, dst=os.path.join(self.package_folder, "include"))
         copy(self, "*.ipp", src=include_dir, dst=os.path.join(self.package_folder, "include"))
 
