@@ -8,7 +8,6 @@ RUN \
     apt-get update && \
     apt-get -y install \
         build-essential \
-        cmake \
         ca-certificates \
         wget \
         make \
@@ -29,5 +28,6 @@ RUN \
 run python3 -m pip install conan --break-system-packages
 run conan profile detect
 
-add https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-linux-x86_64.tar.gz /cmake/
-run export PATH=/cmake/:$PATH
+add https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-linux-x86_64.sh /
+run chmod +x /cmake-${CMAKE_VERSION}-linux-x86_64.sh
+run /cmake-3.27.5-linux-x86_64.sh --skip-license --prefix=/usr/local
