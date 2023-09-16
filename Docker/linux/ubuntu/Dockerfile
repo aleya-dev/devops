@@ -21,6 +21,7 @@ RUN \
         gnupg \
         apt-transport-https \
         libvulkan-dev \
+        glslang-tools \
         xorg-dev \
       && \
     apt-get autoclean
