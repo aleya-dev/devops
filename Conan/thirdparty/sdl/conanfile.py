@@ -54,6 +54,11 @@ class SDL2Conan(ConanFile):
         self.cpp_info.components["libsdl2"].libs = ["SDL2" + static_postfix + postfix]
         self.cpp_info.components["libsdl2"].set_property("cmake_target_name", "SDL2::SDL2")
 
+        if self.settings.os == "Windows":
+            self.cpp_info.components["libsdl2"].system_libs = \
+                ["user32", "gdi32", "winmm", "imm32", "ole32",
+                    "oleaut32", "version", "uuid", "advapi32", "setupapi", "shell32"]
+
         self.cpp_info.components["sdl2main"].libs = ["SDL2main" + postfix]
         self.cpp_info.components["sdl2main"].set_property("cmake_target_name", "SDL2::SDL2main")
         self.cpp_info.components["sdl2main"].requires = ["libsdl2"]
