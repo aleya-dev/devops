@@ -29,10 +29,10 @@ function(add_benchmark_suite)
 
     add_executable(${BENCHMARK_PARSED_ARGS_TARGET} ${SRCS})
 
-    # On GCC; Google Benchmark triggers a warning
+    # On GCC and Apple Clang; Google Benchmark triggers a warning
     # benchmark::DoNotOptimize(const Tp&) is deprecated: The const-ref version of this method
     # can permit undesired compiler optimizations in benchmarks [-Wno-deprecated-declarations]
-    if(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
+    if(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU" OR CMAKE_SYSTEM_NAME STREQUAL "Darwin")
         message(STATUS "Workaround: Adding -Wno-deprecated-declarations on GCC for benchmarks.")
         target_compile_options(
             ${BENCHMARK_PARSED_ARGS_TARGET}
