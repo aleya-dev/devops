@@ -3,6 +3,33 @@ from tempfile import TemporaryDirectory
 from conan import ConanFile
 from conan.tools.scm import Git
 from conan.tools.cmake import CMake
+import importlib.util, sys
+import inspect
+import uuid
+
+
+def inherit_conanfile_requirements(conanfile : ConanFile, path : str):
+    conanfile.output.info('Inheriting conanfile requirements from {}'.format(path))
+    module_name = uuid.uuid4().hex[:6].upper()
+    spec = importlib.util.spec_from_file_location(module_name, path)
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[module_name] = module
+    spec.loader.exec_module(module)
+
+    conan_file_class = inspect.getmembers(
+        module, predicate=lambda o: inspect.isclass(o) \
+            and issubclass(o, ConanFile) \
+            and o.__name__ is not 'ConanFile')
+
+    if len(conan_file_class) == 0:
+        conanfile.output.error('Did not find any ConanFile in given python script. Aborting')
+        return
+
+    if len(conan_file_class) > 1:
+        conanfile.output.error('Found more than 1 possible conan file in given python script. Aborting')
+        return
+
+    conan_file_class[0][1].requirements(conanfile)
 
 
 class AleyaConanBase:
@@ -91,5 +118,5 @@ class AleyaCmakeBase(AleyaConanBase):
 
 class AleyaConanBaseConanFile(ConanFile):
     name = "aleya-conan-base"
-    version = "1.1.0"
+    version = "1.2.0"
     package_type = "python-require"
