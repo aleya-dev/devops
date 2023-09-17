@@ -29,6 +29,18 @@ function(add_benchmark_suite)
 
     add_executable(${BENCHMARK_PARSED_ARGS_TARGET} ${SRCS})
 
+    # On GCC; Google Benchmark triggers a warning
+    # benchmark::DoNotOptimize(const Tp&) is deprecated: The const-ref version of this method
+    # can permit undesired compiler optimizations in benchmarks [-Wno-deprecated-declarations]
+    if(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
+        message(STATUS "Workaround: Adding -Wdeprecated-declarations on GCC for benchmarks.")
+        target_compile_options(
+            ${BENCHMARK_PARSED_ARGS_TARGET}
+            PRIVATE
+                "-Wno-deprecated-declarations"
+        )
+    endif ()
+
     if (BENCHMARK_PARSED_ARGS_FOLDER)
         set_target_properties(
             ${BENCHMARK_PARSED_ARGS_TARGET} PROPERTIES
