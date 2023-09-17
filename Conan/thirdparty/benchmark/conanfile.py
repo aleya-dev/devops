@@ -13,7 +13,7 @@ class BenchmarkConan(ConanFile):
 
     name = "benchmark"
     git_repository = "https://github.com/aleya-dev/mirror-package-benchmark.git"
-    git_branch = "1.8.0"
+    git_branch = "1.8.3"
 
     options = {
         "shared": [False],
