@@ -13,7 +13,7 @@ class SDL2Conan(ConanFile):
 
     name = "sdl"
     git_repository = "https://github.com/aleya-dev/mirror-package-sdl.git"
-    git_branch = "2.28.0"
+    git_branch = "2.28.3"
     ignore_cpp_standard = True
 
     options = {
