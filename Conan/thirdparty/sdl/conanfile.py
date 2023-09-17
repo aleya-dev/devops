@@ -47,7 +47,7 @@ class SDL2Conan(ConanFile):
 
     def package_info(self):
         postfix = "d" if self.settings.os != "Android" and self.settings.build_type == "Debug" else ""
-        static_postfix = "-static" if not self.options.shared else ""
+        static_postfix = "-static" if not self.options.shared and self.settings.os == "Windows" else ""
 
         self.cpp_info.set_property("cmake_file_name", "SDL2")
 
