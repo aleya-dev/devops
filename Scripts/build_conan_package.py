@@ -4,7 +4,7 @@
 import sys
 import logging
 
-from aleya.conan import get_profiles_for_current_os, ConanFileInfo
+from aleya.conan import get_profiles, get_profiles_for_current_os, ConanFileInfo
 
 
 def main(args: list[str]):
@@ -12,8 +12,13 @@ def main(args: list[str]):
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s")
 
     conan_package_path = args[0]
+
+    if len(args) > 1:
+        profiles = get_profiles(args[1])
+    else:
+        profiles = get_profiles_for_current_os()
+
     package = ConanFileInfo(conan_package_path)
-    profiles = get_profiles_for_current_os()
 
     shared_options = package.options['shared'] if hasattr(package.options, 'shared') else [None]
 
