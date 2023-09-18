@@ -1,15 +1,14 @@
 from conan import ConanFile
-from conan.tools.cmake import CMakeToolchain
-from conan.tools.files import rmdir, rm
+from conan.tools.cmake import CMake, CMakeToolchain
+from conan.tools.files import rmdir, rm, replace_in_file
 import os
-
 
 required_conan_version = ">=2.0"
 
 
 class SDL2Conan(ConanFile):
     python_requires = "aleya-conan-base/[>=1.1.0 <1.2.0]"
-    python_requires_extend = "aleya-conan-base.AleyaCmakeBase"
+    python_requires_extend = "aleya-conan-base.AleyaConanBase"
 
     name = "sdl"
     git_repository = "https://github.com/aleya-dev/mirror-package-sdl.git"
@@ -26,6 +25,20 @@ class SDL2Conan(ConanFile):
         "fPIC": True
     }
 
+    def _patch_sources(self):
+        cmakelists = os.path.join(self.source_folder, "CMakeLists.txt")
+        if self.settings.os == "Macos":
+            # don't check for iconv at all
+            replace_check = "#check_library_exists(iconv iconv_open"
+            replace_in_file(self, cmakelists, "check_library_exists(iconv iconv_open",
+                            replace_check)
+
+        # Avoid assuming iconv is available if it is provided by the C runtime,
+        # and let SDL build the fallback implementation
+        replace_in_file(self, cmakelists,
+                        'check_library_exists(c iconv_open "" HAVE_BUILTIN_ICONV)',
+                        '# check_library_exists(c iconv_open "" HAVE_BUILTIN_ICONV)')
+
     def generate(self):
         tc = CMakeToolchain(self)
         tc.variables["SDL_SHARED"] = self.options.shared
@@ -34,8 +47,15 @@ class SDL2Conan(ConanFile):
         tc.variables["SDL_TESTS"] = False
         tc.generate()
 
+    def build(self):
+        self._patch_sources()
+        cmake = CMake(self)
+        cmake.configure()
+        cmake.build()
+
     def package(self):
-        super().package()
+        cmake = CMake(self)
+        cmake.install()
 
         rmdir(self, os.path.join(self.package_folder, "share"))
         rmdir(self, os.path.join(self.package_folder, "cmake"))
@@ -57,11 +77,27 @@ class SDL2Conan(ConanFile):
         if self.settings.os == "Windows":
             self.cpp_info.components["libsdl2"].system_libs = \
                 ["user32", "gdi32", "winmm", "imm32", "ole32",
-                    "oleaut32", "version", "uuid", "advapi32", "setupapi", "shell32"]
+                 "oleaut32", "version", "uuid", "advapi32", "setupapi", "shell32"]
 
         if self.settings.os == "Linux":
             self.cpp_info.components["libsdl2"].system_libs = \
                 ["dl", "rt", "pthread", "X11", "Xrandr", "Xi", "Xxf86vm"]
+
+        if self.settings.os == "Macos":
+            self.cpp_info.components["libsdl2"].frameworks = \
+                ["Carbon",
+                 "AppKit",
+                 "Metal",
+                 "ForceFeedback",
+                 "GameController",
+                 "Foundation",
+                 "CoreServices",
+                 "CoreFoundation",
+                 "CoreVideo",
+                 "CoreGraphics",
+                 "CoreHaptics",
+                 "CoreAudio",
+                 "AudioToolbox"]
 
         self.cpp_info.components["sdl2main"].libs = ["SDL2main" + postfix]
         self.cpp_info.components["sdl2main"].set_property("cmake_target_name", "SDL2::SDL2main")

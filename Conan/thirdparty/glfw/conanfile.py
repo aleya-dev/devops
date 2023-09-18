@@ -3,7 +3,6 @@ from conan.tools.cmake import CMakeToolchain
 from conan.tools.files import rmdir, collect_libs
 import os
 
-
 required_conan_version = ">=2.0"
 
 
@@ -49,5 +48,8 @@ class GlfwConan(ConanFile):
         self.cpp_info.set_property("cmake_target_name", "glfw")
         self.cpp_info.set_property("cmake_target_aliases", ["glfw::glfw"])
         self.cpp_info.set_property("pkg_config_name", "glfw3")
+
+        if self.settings.os == "Macos":
+            self.cpp_info.frameworks = ["AppKit", "IOKit", "Foundation", "CoreFoundation", "CoreGraphics", "CoreAudio"]
 
         self.cpp_info.libs = collect_libs(self)
