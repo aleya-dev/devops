@@ -7,7 +7,7 @@ required_conan_version = ">=2.0"
 
 
 class SDL2Conan(ConanFile):
-    python_requires = "aleya-conan-base/[>=1.1.0 <1.2.0]"
+    python_requires = "aleya-conan-base/[>=1.2.0 <1.3.0]"
     python_requires_extend = "aleya-conan-base.AleyaConanBase"
 
     name = "sdl"
