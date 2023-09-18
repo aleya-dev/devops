@@ -1,0 +1,11 @@
+[settings]
+arch=armv8
+build_type=Release
+compiler=apple-clang
+compiler.cppstd=gnu20
+compiler.libcxx=libc++
+compiler.version=14
+os=iOS
+os.version=16.0
+os.sdk_version=16.0
+os.sdk=iphoneos
