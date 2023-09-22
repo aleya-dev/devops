@@ -1,0 +1,23 @@
+name: 'Conan Install'
+description: 'Runs Conan Install with a given profile to the given output directory'
+inputs:
+  profile:
+    description: 'The profile to use for package selection'
+    required: true
+  source_dir:
+    description: 'The source directory to install from (usually the cmake source dir)'
+    required: true
+    default: '.'
+  binary_dir:
+    description: 'The target directory to install into (usually the cmake binary dir)'
+    required: true
+    default: 'build'
+outputs: {}
+runs:
+  using: composite
+  steps:
+    - name: Running Conan Install
+      shell: bash
+      run: |
+        echo "Running Conan Install for profile ${{ inputs.profile }}"
+        conan install ${{ inputs.source_dir }} -of ${{ inputs.binary_dir }} --profile:host=${{ inputs.profile }} --profile:build=${{ inputs.profile }}
