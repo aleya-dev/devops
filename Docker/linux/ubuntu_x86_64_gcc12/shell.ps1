@@ -1,1 +1,1 @@
-docker run --entrypoint "/bin/bash" -it aeonengine/linux_x86_64:gcc12
+docker run --entrypoint "/bin/bash" -it ghcr.io/aleya-dev/linux_x86_64:gcc12
