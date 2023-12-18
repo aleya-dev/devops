@@ -62,7 +62,19 @@ function(conan_install)
         endif ()
     elseif (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
         string(TOLOWER ${CMAKE_BUILD_TYPE} __config)
-        __conan_install_internal("${CONAN_EXECUTABLE}" "${__conan_profile_path}/macos/appleclang15_x86_64_${__config}")
+
+        if (CMAKE_OSX_DEPLOYMENT_TARGET)
+            if (CMAKE_OSX_DEPLOYMENT_TARGET VERSION_GREATER_EQUAL "14.0")
+                set(__macos_version "14_0")
+            elseif (CMAKE_OSX_DEPLOYMENT_TARGET VERSION_LESS "14.0")
+                set(__macos_version "13_6")
+            endif ()
+        else ()
+            # Assume MacOS 14.0 is no deployment target was set.
+            set(__macos_version "14_0")
+        endif ()
+
+        __conan_install_internal("${CONAN_EXECUTABLE}" "${__conan_profile_path}/macos/macos_${__macos_version}_appleclang15_x86_64_${__config}")
     else ()
         # Otherwise, assume the default profile
         __conan_install_internal("${CONAN_EXECUTABLE}" "")
