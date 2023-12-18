@@ -62,7 +62,7 @@ function(conan_install)
         endif ()
     elseif (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
         string(TOLOWER ${CMAKE_BUILD_TYPE} __config)
-        __conan_install_internal("${CONAN_EXECUTABLE}" "${__conan_profile_path}/macos/appleclang14_x86_64_${__config}")
+        __conan_install_internal("${CONAN_EXECUTABLE}" "${__conan_profile_path}/macos/appleclang15_x86_64_${__config}")
     else ()
         # Otherwise, assume the default profile
         __conan_install_internal("${CONAN_EXECUTABLE}" "")
