@@ -13,9 +13,9 @@ include(CMakeParseArguments)
 function(add_unit_test_suite)
     cmake_parse_arguments(
         UNIT_TEST_PARSED_ARGS
-        "NO_GTEST_MAIN"
+        "NO_GTEST_MAIN;AUTO_GLOB_SOURCES"
         "TARGET;FOLDER"
-        "SOURCES;LIBRARIES;INCLUDES;LABELS"
+        "SOURCES;GLOB_SOURCES;LIBRARIES;INCLUDES;LABELS"
         ${ARGN}
     )
 
@@ -23,15 +23,39 @@ function(add_unit_test_suite)
         message(FATAL_ERROR "No target name was given for unit test.")
     endif ()
 
-    if (NOT UNIT_TEST_PARSED_ARGS_SOURCES)
-        message(FATAL_ERROR "No sources were given for unit test.")
+    if (NOT UNIT_TEST_PARSED_ARGS_AUTO_GLOB_SOURCES AND
+        NOT UNIT_TEST_PARSED_ARGS_SOURCES AND
+        NOT UNIT_TEST_PARSED_ARGS_GLOB_SOURCES)
+        message(FATAL_ERROR "No sources or glob sources were given for unit test.")
     endif ()
 
-    foreach(_src ${UNIT_TEST_PARSED_ARGS_SOURCES})
-        list (APPEND SRCS "${UNIT_TEST_PARSED_ARGS_TARGET}/${_src}")
-    endforeach()
+    if (UNIT_TEST_PARSED_ARGS_AUTO_GLOB_SOURCES)
+        file(GLOB_RECURSE
+            AUTO_GLOB_SRCS
+            CONFIGURE_DEPENDS
+            "${UNIT_TEST_PARSED_ARGS_TARGET}/*"
+        )
+    endif ()
 
-    add_executable(${UNIT_TEST_PARSED_ARGS_TARGET} ${SRCS})
+    if (UNIT_TEST_PARSED_ARGS_SOURCES)
+        foreach(_src ${UNIT_TEST_PARSED_ARGS_SOURCES})
+            list (APPEND SRCS "${UNIT_TEST_PARSED_ARGS_TARGET}/${_src}")
+        endforeach()
+    endif ()
+
+    if (UNIT_TEST_PARSED_ARGS_GLOB_SOURCES)
+        file(GLOB_RECURSE
+            GLOB_SRCS
+            CONFIGURE_DEPENDS
+            "${UNIT_TEST_PARSED_ARGS_GLOB_SOURCES}"
+        )
+    endif ()
+
+    add_executable(${UNIT_TEST_PARSED_ARGS_TARGET}
+        ${SRCS}
+        ${GLOB_SRCS}
+        ${AUTO_GLOB_SRCS}
+    )
 
     if (UNIT_TEST_PARSED_ARGS_FOLDER)
         set_target_properties(
