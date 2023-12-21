@@ -1,6 +1,7 @@
 FROM ubuntu:23.04
 
 ARG CMAKE_VERSION=3.28.1
+ARG CONAN_VERSION=2.0.15
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -26,7 +27,7 @@ RUN \
       && \
     apt-get autoclean
 
-run python3 -m pip install conan --break-system-packages
+run python3 -m pip install conan==${CONAN_VERSION} --break-system-packages
 run conan profile detect
 
 add https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-linux-x86_64.sh /
