@@ -31,4 +31,4 @@ run conan profile detect
 
 add https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-linux-x86_64.sh /
 run chmod +x /cmake-${CMAKE_VERSION}-linux-x86_64.sh
-run /cmake-3.27.5-linux-x86_64.sh --skip-license --prefix=/usr/local
+run /cmake-${CMAKE_VERSION}-linux-x86_64.sh --skip-license --prefix=/usr/local
