@@ -9,9 +9,9 @@ include(CMakeParseArguments)
 function(add_benchmark_suite)
     cmake_parse_arguments(
         BENCHMARK_PARSED_ARGS
-        "NO_BENCHMARK_MAIN"
+        "NO_BENCHMARK_MAIN;AUTO_GLOB_SOURCES"
         "TARGET;FOLDER"
-        "SOURCES;LIBRARIES;INCLUDES;LABELS"
+        "SOURCES;GLOB_SOURCES;LIBRARIES;INCLUDES;LABELS"
         ${ARGN}
     )
 
@@ -19,15 +19,39 @@ function(add_benchmark_suite)
         message(FATAL_ERROR "No target name was given for benchmark.")
     endif ()
 
-    if (NOT BENCHMARK_PARSED_ARGS_SOURCES)
-        message(FATAL_ERROR "No sources were given for benchmark.")
+    if (NOT BENCHMARK_PARSED_ARGS_AUTO_GLOB_SOURCES AND
+        NOT BENCHMARK_PARSED_ARGS_SOURCES AND
+        NOT BENCHMARK_PARSED_ARGS_GLOB_SOURCES)
+        message(FATAL_ERROR "No sources or glob sources were given for benchmark.")
     endif ()
 
-    foreach(_src ${BENCHMARK_PARSED_ARGS_SOURCES})
-        list (APPEND SRCS "${BENCHMARK_PARSED_ARGS_TARGET}/${_src}")
-    endforeach()
+    if (BENCHMARK_PARSED_ARGS_AUTO_GLOB_SOURCES)
+        file(GLOB_RECURSE
+            AUTO_GLOB_SRCS
+            CONFIGURE_DEPENDS
+            "${BENCHMARK_PARSED_ARGS_TARGET}/*"
+        )
+    endif ()
 
-    add_executable(${BENCHMARK_PARSED_ARGS_TARGET} ${SRCS})
+    if (BENCHMARK_PARSED_ARGS_SOURCES)
+        foreach(_src ${BENCHMARK_PARSED_ARGS_SOURCES})
+            list (APPEND SRCS "${BENCHMARK_PARSED_ARGS_TARGET}/${_src}")
+        endforeach()
+    endif ()
+
+    if (BENCHMARK_PARSED_ARGS_GLOB_SOURCES)
+        file(GLOB_RECURSE
+            GLOB_SRCS
+            CONFIGURE_DEPENDS
+            "${BENCHMARK_PARSED_ARGS_GLOB_SOURCES}"
+        )
+    endif ()
+
+    add_executable(${BENCHMARK_PARSED_ARGS_TARGET}
+        ${SRCS}
+        ${GLOB_SRCS}
+        ${AUTO_GLOB_SRCS}
+    )
 
     # On GCC and Apple Clang; Google Benchmark triggers a warning
     # benchmark::DoNotOptimize(const Tp&) is deprecated: The const-ref version of this method
